@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const NAV_LINKS = [
@@ -33,11 +34,26 @@ export default function Navbar() {
       <nav className="container-x flex h-16 items-center justify-between">
         <Link
           href="/"
-          className="flex items-baseline gap-1.5 text-base font-medium text-[var(--color-fg)]"
+          className="group flex items-center gap-3 text-base font-medium text-[var(--color-fg)]"
         >
-          <span>Ali Razzaq</span>
-          <span className="text-[var(--color-fg-muted)]">·</span>
-          <span className="text-sm text-[var(--color-fg-muted)]">developer</span>
+          <div className="relative h-9 w-9 overflow-hidden rounded-full ring-1 ring-[var(--color-line-bright)] transition group-hover:ring-[var(--color-accent)]">
+            <Image
+              src="/ali.jpg"
+              alt="Ali Razzaq"
+              fill
+              sizes="36px"
+              className="object-cover"
+            />
+          </div>
+          <div className="flex items-baseline gap-1.5">
+            <span>Ali Razzaq</span>
+            <span className="hidden text-[var(--color-fg-muted)] sm:inline">
+              ·
+            </span>
+            <span className="hidden text-sm text-[var(--color-fg-muted)] sm:inline">
+              developer
+            </span>
+          </div>
         </Link>
 
         <ul className="hidden items-center gap-8 md:flex">
