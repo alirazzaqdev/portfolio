@@ -102,37 +102,55 @@ export default function HeroSection() {
           transition={{ duration: 1, delay: 0.3 }}
           className="relative lg:col-span-5"
         >
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl border border-[var(--color-line-bright)] bg-[var(--color-bg-elevated)]">
+          <div className="relative mx-auto w-full max-w-md">
             {/* Soft accent glow behind */}
             <div
-              className="pointer-events-none absolute -inset-8 -z-10 opacity-50 blur-3xl"
+              className="pointer-events-none absolute -inset-10 -z-10 opacity-60 blur-3xl"
               style={{
                 background:
-                  "radial-gradient(circle at 50% 30%, rgba(139, 109, 255, 0.4), transparent 70%)",
+                  "radial-gradient(circle at 50% 30%, rgba(139, 109, 255, 0.45), transparent 70%)",
               }}
             />
 
-            <Image
-              src="/ali.jpg"
-              alt="Ali Razzaq, full-stack developer"
-              fill
-              priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 40vw, 480px"
-              className="object-cover"
-            />
+            {/* Subtle floating accent ring (background) */}
+            <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full border border-[var(--color-accent)]/20" />
+            <div className="pointer-events-none absolute -left-4 -bottom-4 h-20 w-20 rounded-full border border-[var(--color-accent)]/15" />
 
-            {/* Subtle bottom gradient for text caption */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[var(--color-bg)]/90 via-[var(--color-bg)]/30 to-transparent" />
+            {/* Photo card */}
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-[var(--color-line-bright)] bg-[var(--color-bg-elevated)] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)]">
+              <Image
+                src="/ali.jpg"
+                alt="Ali Razzaq, full-stack developer"
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 40vw, 480px"
+                className="object-cover"
+              />
 
-            {/* Caption pill */}
-            <div className="absolute bottom-5 left-5 right-5 flex items-center gap-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 backdrop-blur-md">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-accent)] text-xs text-white">
-                AR
+              {/* Subtle inner border highlight */}
+              <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/5" />
+            </div>
+
+            {/* Caption card — outside the photo, below */}
+            <div className="mt-4 flex items-center gap-3 rounded-xl border border-[var(--color-line)] bg-[var(--color-bg-elevated)] p-4">
+              <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full ring-1 ring-[var(--color-line-bright)]">
+                <Image
+                  src="/ali.jpg"
+                  alt="Ali Razzaq avatar"
+                  fill
+                  sizes="44px"
+                  className="object-cover"
+                />
               </div>
               <div className="flex-1">
-                <div className="text-sm font-medium text-white">Ali Razzaq</div>
-                <div className="text-xs text-white/60">Full-Stack Developer</div>
+                <div className="text-sm font-medium text-[var(--color-fg)]">
+                  Ali Razzaq
+                </div>
+                <div className="text-xs text-[var(--color-fg-muted)]">
+                  Full-Stack Developer · Lahore, Pakistan
+                </div>
               </div>
+              <div className="flex h-2 w-2 shrink-0 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(74,222,128,0.6)]" />
             </div>
           </div>
         </motion.div>

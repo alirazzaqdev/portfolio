@@ -1,8 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ComponentType, type SVGProps } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { siteConfig } from "@/lib/config";
+import {
+  GitHubIcon,
+  LinkedInIcon,
+  FacebookIcon,
+  EmailIcon,
+  ArrowUpRightIcon,
+} from "@/components/ui/SocialIcons";
 
 type Status = "idle" | "sending" | "success" | "error";
 
@@ -106,23 +113,30 @@ export default function Contact() {
               label="Email"
               value={siteConfig.email}
               href={siteConfig.social.email}
+              Icon={EmailIcon}
             />
             <ContactBlock
               label="GitHub"
               value={siteConfig.socialDisplay.github}
               href={siteConfig.social.github}
+              Icon={GitHubIcon}
             />
             <ContactBlock
               label="LinkedIn"
               value={siteConfig.socialDisplay.linkedin}
               href={siteConfig.social.linkedin}
+              Icon={LinkedInIcon}
             />
             <ContactBlock
               label="Facebook"
               value="facebook.com/ali.razzaq"
               href={siteConfig.social.facebook}
+              Icon={FacebookIcon}
             />
-            <ContactBlock label="Location" value="Lahore, Pakistan · UTC+5" />
+            <ContactBlock
+              label="Location"
+              value="Lahore, Pakistan · UTC+5"
+            />
 
             <div className="card p-5">
               <div className="eyebrow">Response time</div>
@@ -258,10 +272,12 @@ function ContactBlock({
   label,
   value,
   href,
+  Icon,
 }: {
   label: string;
   value: string;
   href?: string;
+  Icon?: ComponentType<SVGProps<SVGSVGElement>>;
 }) {
   const Component = href ? "a" : "div";
   return (
@@ -273,17 +289,22 @@ function ContactBlock({
             rel: href.startsWith("http") ? "noopener noreferrer" : undefined,
           }
         : {})}
-      className="card card-hover group block p-5"
+      className="card card-hover group flex items-center gap-4 p-5"
     >
-      <div className="text-xs text-[var(--color-fg-muted)]">{label}</div>
-      <div className="mt-1.5 flex items-center justify-between">
-        <span className="text-sm text-[var(--color-fg)]">{value}</span>
-        {href && (
-          <span className="text-sm text-[var(--color-fg-muted)] transition group-hover:translate-x-1 group-hover:text-[var(--color-fg)]">
-            →
-          </span>
-        )}
+      {Icon && (
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--color-line)] bg-[var(--color-bg)] text-[var(--color-fg-muted)] transition group-hover:border-[var(--color-line-bright)] group-hover:text-[var(--color-fg)]">
+          <Icon className="h-4 w-4" />
+        </div>
+      )}
+      <div className="min-w-0 flex-1">
+        <div className="text-xs text-[var(--color-fg-muted)]">{label}</div>
+        <div className="mt-0.5 truncate text-sm text-[var(--color-fg)]">
+          {value}
+        </div>
       </div>
+      {href && (
+        <ArrowUpRightIcon className="h-4 w-4 shrink-0 text-[var(--color-fg-muted)] transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[var(--color-fg)]" />
+      )}
     </Component>
   );
 }
