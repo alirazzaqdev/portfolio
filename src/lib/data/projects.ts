@@ -962,6 +962,180 @@ export async function verifyPin(pin: string): Promise<boolean> {
     ],
     related: ["hisably", "rustam-battery"],
   },
+
+  {
+    id: "intellihealthcare",
+    slug: "intellihealthcare",
+    name: "INTELLIHEALTHCARE",
+    codename: "Live Project · 06",
+    tagline: "A structured second opinion, powered by machine learning.",
+    category: "Healthcare · ML Diagnostics",
+    year: "2025",
+    status: "BETA",
+    accent: "#22e3c8",
+    duration: "Academic year 2024–2025",
+    team: "3-person student team + faculty supervisor",
+    role: "ML pipeline, backend & full front-end",
+    liveUrl: "https://intellihealthcare.vercel.app",
+    image: "/projects/intellihealthcare.jpg",
+    stack: [
+      "Python",
+      "Flask",
+      "scikit-learn",
+      "pandas",
+      "NumPy",
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Vercel",
+    ],
+    metrics: [
+      { label: "Conditions covered", value: "15", trend: "Model capability" },
+      { label: "Tracked symptoms", value: "49", trend: "Model capability" },
+      { label: "Detection modules", value: "2", trend: "Symptom Tracker + Heart Detector" },
+      { label: "Avg. response time", value: "<2s", trend: "Product capability" },
+    ],
+    engineeringMetrics: [
+      { label: "Symptom classifier accuracy", value: "83%", note: "Decision Tree, stratified 80/20 test split" },
+      { label: "Heart-risk model accuracy", value: "80%", note: "Random Forest, stratified 80/20 test split" },
+      { label: "Hosting cost / month", value: "$0 (Vercel free tier)" },
+      { label: "Stats page numbers", value: "Computed live, not hardcoded" },
+    ],
+    description:
+      "A Final Year Project built with two teammates and a faculty supervisor: a healthcare web app that analyzes patient-reported symptoms with a trained Decision Tree classifier and separately screens clinical report values for heart disease risk with a Random Forest model — giving a fast, structured second opinion in regions where specialists are scarce.",
+    challenge:
+      "Accurate, timely diagnosis is a real bottleneck in under-resourced healthcare settings — doctors handling high patient volumes make more errors, and many areas simply lack access to specialists. No existing tool combined a plain-language, doctor-usable interface with a transparent, urgency-ranked machine learning verdict.",
+    constraints: [
+      "Had to be usable by doctors and patients with no ML background — no raw probabilities, just plain-language guidance",
+      "Text-based symptom input only — no assumption of lab equipment or connected medical devices",
+      "Student project budget — free-tier hosting only, no paid infrastructure",
+      "Browser-only access (Chrome/Firefox/Edge) — no native app requirement",
+    ],
+    tradeoffs: [
+      {
+        decision: "Custom-built symptom/heart-risk datasets instead of a public Kaggle dataset",
+        gave_up:
+          "A larger, pre-vetted sample size. Won a dataset whose symptom-disease relationships we could design and verify against the report's exact disease list — at the cost of clinical validity, which is why the site is explicit that this is diagnostic assistance, not a certified medical tool.",
+      },
+      {
+        decision: "Decision Tree / Random Forest instead of a neural network",
+        gave_up:
+          "The heavier 'deep learning' pitch. Won a model that's interpretable and fast enough for sub-2-second predictions on free-tier serverless hosting — the right trade for a structured, tabular symptom dataset at this scale.",
+      },
+    ],
+    solution:
+      "Built as a Flask web app with two independent ML modules behind a shared UI: a Decision Tree classifier trained on a 49-symptom, 15-disease dataset for the Symptom Tracker, and a Random Forest classifier trained on 13 clinical inputs (blood pressure, cholesterol, ECG results, etc.) for the Heart Disease Detector. Every prediction returns with an urgency label — emergency, see a doctor, or self-care — so the next step is never ambiguous.",
+    outcome:
+      "Live at intellihealthcare.vercel.app. The symptom classifier holds ~83% accuracy and the heart-risk model ~80%, both computed on a held-out test split and displayed live on the site's own stats page rather than hardcoded.",
+    features: [
+      "Symptom Tracker — searchable 49-symptom picker across 15 supported conditions",
+      "Heart Disease Detector — 13 clinical inputs (BP, cholesterol, ECG, etc.) scored by a Random Forest model",
+      "Urgency-labeled results (emergency / see a doctor / self-care) on every prediction",
+      "Lightweight AI health assistant with an optional live Gemini API connection",
+      "Live model-accuracy stats page — not a fixed number",
+    ],
+    architecture: [
+      "Flask backend serving both the UI (Jinja templates) and JSON prediction endpoints",
+      "Two independently trained scikit-learn models pickled and loaded once at boot",
+      "Vanilla JS frontend — no framework, kept deliberately light for a serverless deploy",
+      "Deployed on Vercel's Python runtime, GitHub-connected for auto-redeploy on push",
+    ],
+    process: [
+      {
+        week: "Phase 1",
+        label: "Domain research",
+        desc: "Requirements analysis, use cases, and stakeholder mapping for a symptom-analysis tool aimed at resource-limited healthcare settings.",
+      },
+      {
+        week: "Phase 2",
+        label: "Data + models",
+        desc: "Built the symptom/heart-risk datasets and trained the Decision Tree and Random Forest classifiers.",
+      },
+      {
+        week: "Phase 3",
+        label: "Web app",
+        desc: "Flask backend, prediction endpoints, and the full front-end — Symptom Tracker, Heart Detector, stats page, AI assistant.",
+      },
+      {
+        week: "Phase 4",
+        label: "Testing",
+        desc: "Decision-table test cases across multiple symptom combinations, verifying predicted vs. expected disease.",
+      },
+      {
+        week: "Phase 5",
+        label: "Deploy + polish",
+        desc: "Shipped to Vercel, then a full visual pass — typography system, animated background, scroll reveals.",
+      },
+    ],
+    snippets: [
+      {
+        language: "python",
+        filename: "app.py",
+        caption:
+          "The symptom-prediction endpoint: builds a feature vector from the selected symptoms, runs it through the pickled Decision Tree, and returns an urgency-labeled verdict.",
+        code: `@app.route("/predict-symptoms", methods=["POST"])
+def predict_symptoms():
+    payload = request.get_json(silent=True) or {}
+    selected = set(payload.get("symptoms", []))
+
+    if not selected:
+        return jsonify({"error": "Please select at least one symptom."}), 400
+
+    input_vector = pd.DataFrame(
+        [[1 if s in selected else 0 for s in SYMPTOMS]], columns=SYMPTOMS
+    )
+    prediction = DISEASE_MODEL.predict(input_vector)[0]
+
+    confidence = None
+    if hasattr(DISEASE_MODEL, "predict_proba"):
+        proba = DISEASE_MODEL.predict_proba(input_vector)[0]
+        confidence = round(float(max(proba)) * 100, 1)
+
+    description, advice, urgency = DISEASE_INFO.get(
+        prediction, ("", "Please consult a healthcare professional.", "see-doctor")
+    )
+
+    return jsonify({
+        "disease": prediction,
+        "description": description,
+        "advice": advice,
+        "urgency": urgency,
+        "confidence": confidence,
+    })`,
+      },
+      {
+        language: "python",
+        filename: "train_disease_model.py",
+        caption:
+          "Training script: stratified 80/20 split so accuracy is measured on unseen data, not the training set — the number shown on the stats page comes straight from this run.",
+        code: `def main():
+    df = pd.read_csv(DATA_PATH)
+    symptoms = list(df.columns[1:])
+    diseases = sorted(df["Disease"].unique())
+
+    X = df[symptoms]
+    y = df["Disease"]
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42, stratify=y
+    )
+
+    model = DecisionTreeClassifier(max_depth=12, random_state=42)
+    model.fit(X_train, y_train)
+
+    accuracy = accuracy_score(y_test, model.predict(X_test))
+
+    with open(MODEL_PATH, "wb") as f:
+        pickle.dump({
+            "model": model,
+            "symptoms": symptoms,
+            "diseases": diseases,
+            "accuracy": accuracy,
+        }, f)`,
+      },
+    ],
+    related: [],
+  },
 ];
 
 export function getProject(slug: string): Project | undefined {
