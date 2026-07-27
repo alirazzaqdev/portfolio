@@ -7,73 +7,65 @@ export interface Testimonial {
   company: string;
   quote: string;
   project?: string;
+  /** Optional LinkedIn profile of the author for third-party verification. */
+  authorLinkedIn?: string;
 }
 
+/**
+ * REAL CLIENT TESTIMONIALS ONLY.
+ *
+ * The testimonials section on the home page auto-hides when this array is empty.
+ *
+ * The three placeholder objects below are commented out — they map to the three
+ * real clients/projects on this site and exist as a checklist of who to ask:
+ *
+ * TODO: Get a 2–3 sentence testimonial from the owner of Rustam Battery
+ *       about the website + the on-site quote tool.
+ * TODO: Get a 2–3 sentence testimonial from Muhammad Waqas (CEO) at
+ *       Window Land Dubai about the full-stack site + admin panel.
+ * TODO: Get a short note from a Solar Quotation field-sales user
+ *       about the on-site PWA quote flow.
+ *
+ * When a real quote arrives:
+ *   1. Uncomment the matching block.
+ *   2. Fill in `quote`, `author`, `role`, `company`, and (if possible)
+ *      `authorLinkedIn` so visitors can verify the person is real.
+ *   3. Set `timestamp` to the date you received the quote.
+ *
+ * Never write a testimonial that the client did not actually write.
+ */
 export const testimonials: Testimonial[] = [
-  {
-    id: "t1",
-    timestamp: "2025-09-14T10:32:00Z",
-    rating: 5,
-    author: "Sarah Chen",
-    role: "CTO",
-    company: "Northwind Capital",
-    quote:
-      "Ali rebuilt our reconciliation pipeline in three weeks. Cut what used to take five days down to under eight hours. He thinks like an owner — flagged three architectural risks we hadn't noticed and fixed two of them before we even prioritized.",
-    project: "Treasury Pipeline",
-  },
-  {
-    id: "t2",
-    timestamp: "2025-08-02T15:18:00Z",
-    rating: 5,
-    author: "Marcus Webb",
-    role: "Founder",
-    company: "Helix Systems",
-    quote:
-      "Most contractors ship code. Ali ships systems — with monitoring, with docs, with a runbook. Our oncall actually thanked me for hiring him. I've never had that happen before.",
-    project: "Backend Rewrite",
-  },
-  {
-    id: "t3",
-    timestamp: "2025-06-21T08:47:00Z",
-    rating: 5,
-    author: "Priya Nair",
-    role: "Head of Engineering",
-    company: "Ledgerline",
-    quote:
-      "We were burning $14k/month on a managed observability stack. Ali designed and shipped a self-hosted alternative that's now cheaper, faster, and easier to query. Paid for itself in 60 days.",
-    project: "Observability Migration",
-  },
-  {
-    id: "t4",
-    timestamp: "2025-05-09T12:05:00Z",
-    rating: 5,
-    author: "Daniel Ortiz",
-    role: "Product Lead",
-    company: "Stitch.io",
-    quote:
-      "He integrated Claude into our editor and the cache hit rate is sitting at 78%. Token bill dropped by more than half month-over-month. Excellent communicator — async-friendly, no theatrics, just delivery.",
-    project: "AI Integration",
-  },
-  {
-    id: "t5",
-    timestamp: "2025-03-28T19:22:00Z",
-    rating: 5,
-    author: "Aisha Khan",
-    role: "VP Engineering",
-    company: "Quanta Labs",
-    quote:
-      "Hired Ali for a one-week architecture review. Found a P0 race condition we'd been chasing for a quarter. Stayed on for the full backend rebuild after that. One of the strongest engineers I've worked with this year.",
-    project: "Architecture Audit",
-  },
-  {
-    id: "t6",
-    timestamp: "2025-02-11T09:14:00Z",
-    rating: 5,
-    author: "Tom Reilly",
-    role: "Solo Founder",
-    company: "Cinder",
-    quote:
-      "I needed a full-stack person who could ship without holding my hand. Ali delivered the MVP, got it on AWS, and walked me through everything in a 90-minute Loom. Already lined him up for v2.",
-    project: "MVP Build",
-  },
+  // {
+  //   id: "rustam-battery",
+  //   timestamp: "TODO",
+  //   rating: 5,
+  //   author: "TODO: Owner name",
+  //   role: "Founder",
+  //   company: "Rustam Battery & Solar Energy House",
+  //   quote: "TODO: 2–3 sentences in their own words.",
+  //   project: "Rustam Battery website",
+  //   authorLinkedIn: "TODO",
+  // },
+  // {
+  //   id: "window-land",
+  //   timestamp: "TODO",
+  //   rating: 5,
+  //   author: "Muhammad Waqas",
+  //   role: "CEO",
+  //   company: "Window Land Glass & Aluminium, Dubai",
+  //   quote: "TODO: 2–3 sentences in their own words.",
+  //   project: "Window Land monorepo + admin panel",
+  //   authorLinkedIn: "TODO",
+  // },
+  // {
+  //   id: "solar-quotation",
+  //   timestamp: "TODO",
+  //   rating: 5,
+  //   author: "TODO: Sales lead name",
+  //   role: "Field Sales",
+  //   company: "TODO: company name",
+  //   quote: "TODO: short note from a real user of the PWA.",
+  //   project: "Solar Quotation PWA",
+  //   authorLinkedIn: "TODO",
+  // },
 ];

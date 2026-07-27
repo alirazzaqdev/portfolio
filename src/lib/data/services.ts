@@ -5,159 +5,147 @@ export interface Service {
   title: string;
   summary: string;
   capabilities: string[];
+  /** Slugs of case-study projects that demonstrate this service. */
+  proofProjects?: string[];
   payload: Record<string, string>;
   response: Record<string, string>;
 }
 
+/**
+ * Services are limited to work I can demonstrate via the case studies on this site.
+ * Every service points to at least one real project so a client can verify the claim.
+ * Do not add services without a proofProject backing them.
+ */
 export const services: Service[] = [
   {
-    id: "web-app",
-    endpoint: "/build/web-app",
+    id: "marketing-ecommerce",
+    endpoint: "/build/marketing-site",
     method: "POST",
-    title: "Full-Stack Web Applications",
+    title: "Marketing & E-commerce Sites",
     summary:
-      "Production-grade web apps from data layer to pixel-perfect UI. Django, Flask, or Node.js on the backend; React + Next.js on the frontend.",
+      "Production marketing sites with product catalogs, lead capture, and SEO baked in — built on Next.js + Vercel. Designed for SME businesses where the site is a real sales channel, not a brochure.",
     capabilities: [
-      "Modern React + Next.js 15 frontends",
-      "Django / Flask / Express APIs",
-      "REST + GraphQL design",
-      "Auth, payments, file uploads, email",
-      "Type-safe end-to-end (TypeScript + Pydantic)",
+      "Next.js 15 App Router + Server Components",
+      "Product catalogs with brand/category filters",
+      "WhatsApp-first lead capture for local markets",
+      "Custom calculators (e.g. solar sizing, quote estimators)",
+      "Aggressive on-page SEO + JSON-LD",
     ],
+    proofProjects: ["rustam-battery", "window-land"],
     payload: {
-      type: "web_application",
-      stack: "next.js | django | postgres",
-      timeline: "3-8 weeks",
+      type: "marketing_site",
+      stack: "next.js | tailwind | vercel",
+      timeline: "4-8 weeks",
     },
     response: {
       status: "200 OK",
       delivery: "production_ready",
-      includes: "code | tests | docs | deploy",
+      includes: "code | seo | deploy | admin_docs",
     },
   },
   {
-    id: "backend",
-    endpoint: "/build/backend-system",
+    id: "internal-tools-pwa",
+    endpoint: "/build/internal-tool",
     method: "POST",
-    title: "Backend & Database Engineering",
+    title: "Internal Tools & Offline PWAs",
     summary:
-      "Scalable backend systems engineered for the long term. Microservices, event-driven architectures, and database design that scales past 1M rows.",
+      "Installable web apps for field teams — quote generators, PIN-locked tools, branded PDF output, fully offline-first. The kind of thing sales reps run on a phone in a customer's living room.",
     capabilities: [
-      "Spring Boot, Django, FastAPI, Node services",
-      "PostgreSQL / MySQL schema design + tuning",
-      "MongoDB for document workloads",
-      "Microservices with proper boundaries",
-      "Async jobs, queues, and scheduled tasks",
+      "PWA install + service worker",
+      "Offline-first persistence (IndexedDB / localStorage)",
+      "PIN / device-level auth",
+      "Client-side branded PDF generation (jsPDF)",
+      "Mobile-first responsive UI",
     ],
+    proofProjects: ["solar-quotation", "hisably"],
     payload: {
-      type: "backend_system",
-      pattern: "microservices | monolith | hybrid",
-      scale: "up to 10M req/day",
+      type: "internal_tool",
+      stack: "react | vite | pwa",
+      timeline: "3-6 weeks",
     },
     response: {
       status: "200 OK",
-      delivery: "deployed_and_observable",
-      includes: "api | docs | runbook | metrics",
+      delivery: "installable_pwa",
+      includes: "app | offline_sync | install_guide",
     },
   },
   {
-    id: "cloud-devops",
-    endpoint: "/deploy/cloud-infra",
+    id: "full-stack-backends",
+    endpoint: "/build/full-stack",
     method: "POST",
-    title: "Cloud & DevOps",
+    title: "Full-Stack Web Applications",
     summary:
-      "AWS-native infrastructure with Docker containers, CI/CD pipelines, and observability baked in. From zero to deployed in days, not months.",
+      "End-to-end web apps with admin panels, authenticated APIs, and proper data models. Comfortable structuring a Turborepo monorepo when the project needs more than one service.",
     capabilities: [
-      "Dockerized applications + Compose",
-      "AWS EC2, S3, Lambda, RDS configuration",
-      "CI/CD pipelines (GitHub Actions)",
-      "Monitoring + alerting setup",
-      "Cost-optimized infrastructure",
+      "Next.js 15 / React frontends + admin panels",
+      "Node.js Express APIs + Python FastAPI microservices",
+      "JWT auth with role-based access",
+      "PostgreSQL / MongoDB schema design",
+      "Turborepo monorepos for multi-service apps",
     ],
+    proofProjects: ["hisably", "window-land"],
     payload: {
-      type: "infrastructure",
-      target: "aws | self_hosted",
-      pipeline: "github_actions | gitlab_ci",
+      type: "full_stack_app",
+      stack: "next.js | express | fastapi | postgres | mongo",
+      timeline: "6-10 weeks",
     },
     response: {
       status: "200 OK",
       delivery: "deployed_and_documented",
-      includes: "iac | pipelines | dashboards",
+      includes: "frontend | api | admin | docs",
     },
   },
   {
     id: "ai-integration",
     endpoint: "/integrate/ai",
     method: "POST",
-    title: "AI Integration & Automation",
+    title: "AI Integration",
     summary:
-      "Bring large language models into your existing product. OpenAI, Claude, Gemini — implemented with caching, streaming, and cost controls that scale.",
+      "Bring Claude or OpenAI into your existing product or workflow. Focus on prompt design, structured outputs, and cost controls — not chatbots for the sake of it.",
     capabilities: [
-      "Claude / GPT / Gemini API integration",
-      "RAG systems (vector DB + retrieval)",
-      "Prompt caching for cost reduction",
-      "Streaming responses via SSE",
+      "Claude / OpenAI API integration",
+      "Structured outputs + tool use",
+      "Prompt engineering with cost & latency tracking",
       "Custom Python automation scripts",
+      "Retrieval over your own content",
     ],
+    // TODO: link a real AI-integration case study when one is published.
+    proofProjects: [],
     payload: {
       type: "ai_integration",
-      models: "claude | openai | gemini",
-      patterns: "rag | agent | streaming",
+      models: "claude | openai",
+      patterns: "structured_output | tool_use | rag",
     },
     response: {
       status: "200 OK",
-      delivery: "integrated_and_optimized",
-      includes: "api | cache | telemetry",
+      delivery: "integrated",
+      includes: "api | prompts | cost_telemetry",
     },
   },
   {
-    id: "ml",
-    endpoint: "/build/ml-pipeline",
+    id: "seo-performance",
+    endpoint: "/improve/seo-perf",
     method: "POST",
-    title: "Machine Learning Pipelines",
+    title: "SEO & Performance",
     summary:
-      "End-to-end ML pipelines from data ingest to model serving. Scikit-learn, Pandas, NumPy on classic ML; LLM-based systems for modern workloads.",
+      "On-page SEO and Lighthouse-grade performance for sites that already exist. Structured data, sitemap, geo targeting, image optimization, and JS budget cleanup.",
     capabilities: [
-      "Data cleaning + feature engineering",
-      "Model training (Scikit-learn, XGBoost)",
-      "Pipeline orchestration",
-      "Model serving via FastAPI",
-      "A/B testing + monitoring",
+      "On-page SEO + meta + JSON-LD (Person, LocalBusiness, Article)",
+      "Geo / regional targeting (PK, UAE)",
+      "Sitemap + robots + search-console setup",
+      "Image optimization + lazy loading",
+      "Core Web Vitals tuning",
     ],
+    proofProjects: ["rustam-battery", "window-land"],
     payload: {
-      type: "ml_pipeline",
-      stage: "research | production",
-      stack: "python | sklearn | pandas",
+      type: "seo_perf",
+      target: "lighthouse_90+ | rich_results",
+      duration: "1-3 weeks",
     },
     response: {
       status: "200 OK",
-      delivery: "trained_and_deployed",
-      includes: "model | api | metrics",
-    },
-  },
-  {
-    id: "consulting",
-    endpoint: "/advise/architecture",
-    method: "POST",
-    title: "Technical Consulting",
-    summary:
-      "Architecture review, code audits, and technical decision-making for early-stage teams. Get a senior engineer's opinion before you commit to a 6-month build.",
-    capabilities: [
-      "Architecture review + recommendations",
-      "Code audits with prioritized findings",
-      "Stack selection guidance",
-      "Performance + scaling reviews",
-      "Hiring + interview support",
-    ],
-    payload: {
-      type: "consulting_engagement",
-      duration: "1-4 weeks",
-      output: "report | recommendations",
-    },
-    response: {
-      status: "200 OK",
-      delivery: "actionable_findings",
-      includes: "report | call | followup",
+      delivery: "measurable_improvement",
+      includes: "audit | fixes | report",
     },
   },
 ];

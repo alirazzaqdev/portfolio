@@ -1,7 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { services, type Service } from "@/lib/data/services";
+import { getProject } from "@/lib/data/projects";
 
 export default function Services() {
   return (
@@ -23,8 +25,9 @@ export default function Services() {
             .
           </h2>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-[var(--color-fg-soft)]">
-            Six things I do well. Send me a brief and I'll tell you honestly
-            whether I'm the right fit.
+            Five focused services, each backed by a real shipped project. Send
+            me a brief and I&apos;ll tell you honestly whether I&apos;m the
+            right fit.
           </p>
         </motion.div>
 
@@ -39,6 +42,10 @@ export default function Services() {
 }
 
 function ServiceCard({ service, index }: { service: Service; index: number }) {
+  const proofProjects = (service.proofProjects ?? [])
+    .map((slug) => getProject(slug))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -62,6 +69,25 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
           </li>
         ))}
       </ul>
+
+      {proofProjects.length > 0 && (
+        <div className="mt-6 border-t border-[var(--color-line)] pt-5">
+          <div className="text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
+            Shipped on
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {proofProjects.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/work/${p.slug}`}
+                className="rounded-full border border-[var(--color-line-bright)] px-3 py-1 text-xs text-[var(--color-fg-soft)] transition hover:border-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
+              >
+                {p.name} ↗
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 }

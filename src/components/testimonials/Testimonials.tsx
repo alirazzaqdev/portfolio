@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { testimonials, type Testimonial } from "@/lib/data/testimonials";
 
 export default function Testimonials() {
+  if (testimonials.length === 0) return null;
   return (
     <section className="section border-t border-[var(--color-line)]">
       <div className="container-x">
@@ -67,8 +68,21 @@ function TestimonialCard({
             .join("")
             .slice(0, 2)}
         </div>
-        <div>
-          <div className="text-sm text-[var(--color-fg)]">{t.author}</div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 text-sm text-[var(--color-fg)]">
+            <span>{t.author}</span>
+            {t.authorLinkedIn && (
+              <a
+                href={t.authorLinkedIn}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[var(--color-fg-muted)] transition hover:text-[var(--color-fg)]"
+                aria-label={`${t.author} on LinkedIn`}
+              >
+                ↗
+              </a>
+            )}
+          </div>
           <div className="text-xs text-[var(--color-fg-muted)]">
             {t.role} · {t.company}
           </div>

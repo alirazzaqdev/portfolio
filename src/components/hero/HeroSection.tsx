@@ -48,9 +48,9 @@ export default function HeroSection() {
             transition={{ duration: 0.7, delay: 0.25 }}
             className="mt-8 max-w-xl text-lg leading-relaxed text-[var(--color-fg-soft)]"
           >
-            Full-stack developer based in Lahore, Pakistan. I work with
-            startups and growing teams to ship production web apps —
-            from Python and Java backends to React frontends, deployed on AWS.
+            Full-stack developer based in Lahore, Pakistan. I ship production
+            web apps for businesses in Pakistan and the UAE — from Python and
+            Java backends to React frontends, deployed on Vercel and AWS.
           </motion.p>
 
           <motion.div
@@ -85,13 +85,26 @@ export default function HeroSection() {
               <div className="mt-1 text-[var(--color-fg)]">Lahore, Pakistan</div>
             </div>
             <div>
-              <div className="text-[var(--color-fg-muted)]">Experience</div>
-              <div className="mt-1 text-[var(--color-fg)]">3+ years</div>
+              <div className="text-[var(--color-fg-muted)]">Shipping since</div>
+              {/* TODO: replace 2024 with the actual year you shipped your first paid/production project. */}
+              <div className="mt-1 text-[var(--color-fg)]">2024</div>
             </div>
             <div>
               <div className="text-[var(--color-fg-muted)]">Specialty</div>
               <div className="mt-1 text-[var(--color-fg)]">Full-stack & AI</div>
             </div>
+            <a
+              href="#certificates"
+              className="group block transition"
+            >
+              <div className="text-[var(--color-fg-muted)] transition group-hover:text-[var(--color-fg-soft)]">
+                Credentials
+              </div>
+              <div className="mt-1 inline-flex items-center gap-1.5 text-[var(--color-accent-bright)] transition group-hover:text-[var(--color-fg)]">
+                <span>View</span>
+                <span className="transition group-hover:translate-x-0.5">↓</span>
+              </div>
+            </a>
           </motion.div>
         </div>
 

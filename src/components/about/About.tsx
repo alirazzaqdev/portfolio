@@ -51,32 +51,40 @@ export default function About() {
             className="space-y-5 text-lg leading-relaxed text-[var(--color-fg-soft)] lg:col-span-7"
           >
             <p>
-              I'm a full-stack developer with a Bachelor's degree in
+              I&apos;m a full-stack developer with a Bachelor&apos;s degree in
               Computer Science from{" "}
-              <span className="text-[var(--color-fg)]">UMT, Lahore</span>. For
-              the past three years I've been building production systems for
-              clients across fintech, AI, and developer tools — usually as
-              the engineer who can take an idea from a Figma file to a deployed,
-              monitored, and documented system.
+              <span className="text-[var(--color-fg)]">UMT, Lahore</span>.
+              I&apos;ve shipped production sites and internal tools for
+              businesses across{" "}
+              <span className="text-[var(--color-fg)]">
+                solar energy in Pakistan
+              </span>{" "}
+              and{" "}
+              <span className="text-[var(--color-fg)]">
+                glass &amp; aluminium in the UAE
+              </span>
+              {" "}— usually as the one engineer who takes an idea from a brief
+              to a deployed, monitored, and documented system.
             </p>
             <p>
               I work mostly across the{" "}
               <span className="text-[var(--color-fg)]">Python</span>,{" "}
               <span className="text-[var(--color-fg)]">Java</span>, and{" "}
               <span className="text-[var(--color-fg)]">JavaScript</span>{" "}
-              ecosystems. I'm comfortable on the database side (Postgres,
-              MySQL, MongoDB), the cloud side (Docker, AWS), and the UI side
-              (React, Next.js, Tailwind).
+              ecosystems — Next.js / React on the frontend, Express / Django /
+              FastAPI on the backend, Postgres + MongoDB on the data layer,
+              and AWS for hosting. Comfortable with AI integration (Claude /
+              GPT) and offensive security fundamentals (CEH-trained).
             </p>
             <p>
-              I take on a small number of projects at a time so I can give
-              each one the attention it deserves. If you're a founder or team
-              looking for someone reliable to ship a real product —{" "}
+              I take on a small number of projects at a time so each one gets
+              real attention. If you&apos;re a founder or team that needs
+              someone reliable to ship a real product —{" "}
               <a
                 href="#contact"
                 className="link-underline text-[var(--color-fg)]"
               >
-                let's talk
+                let&apos;s talk
               </a>
               .
             </p>
@@ -88,17 +96,31 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="space-y-5 lg:col-span-5"
+            className="space-y-8 lg:col-span-5"
           >
-            {/* Photo card */}
-            <div className="relative aspect-[5/4] w-full overflow-hidden rounded-2xl border border-[var(--color-line-bright)] bg-[var(--color-bg-elevated)]">
-              <Image
-                src="/ali.jpg"
-                alt="Ali Razzaq"
-                fill
-                sizes="(max-width: 1024px) 100vw, 480px"
-                className="object-cover"
+            {/* Photo — circular portrait */}
+            <div className="relative mx-auto aspect-square w-full max-w-[420px]">
+              {/* Soft accent glow behind */}
+              <div
+                className="pointer-events-none absolute -inset-6 -z-10 opacity-50 blur-3xl"
+                style={{
+                  background:
+                    "radial-gradient(circle at 50% 40%, rgba(139, 109, 255, 0.4), transparent 70%)",
+                }}
               />
+              {/* Decorative accent rings */}
+              <div className="pointer-events-none absolute -right-3 -top-3 h-24 w-24 rounded-full border border-[var(--color-accent)]/25" />
+              <div className="pointer-events-none absolute -left-2 -bottom-2 h-16 w-16 rounded-full border border-[var(--color-accent)]/20" />
+
+              <div className="relative h-full w-full overflow-hidden rounded-full ring-1 ring-[var(--color-line-bright)] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)]">
+                <Image
+                  src="/ali-portrait.png"
+                  alt="Ali Razzaq"
+                  fill
+                  sizes="(max-width: 1024px) 80vw, 420px"
+                  className="object-cover"
+                />
+              </div>
             </div>
 
             {/* Background card */}

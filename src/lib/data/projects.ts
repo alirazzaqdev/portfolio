@@ -31,561 +31,816 @@ export interface Project {
   duration: string;
   team: string;
   role: string;
+  /** Explicit breakdown of what I personally built vs. what the client supplied. */
+  myWork?: string[];
+  liveUrl?: string;
+  image: string;
   stack: string[];
+  /**
+   * Client / business context numbers (e.g. "500+ installations").
+   * These describe the client's business, not my engineering output.
+   */
   metrics: { label: string; value: string; trend?: string }[];
+  /**
+   * Engineering-side numbers I produced (Lighthouse score, load time,
+   * SEO ranking, p95 latency, quote-generation time, etc.).
+   * Kept separate from client business stats above.
+   */
+  engineeringMetrics?: { label: string; value: string; note?: string }[];
   description: string;
   challenge: string;
+  /** Real constraints that shaped the architecture (audience, budget, infra, etc.). */
+  constraints?: string[];
   solution: string;
+  /** Honest 1–2 tradeoffs I made. What I gave up to get the chosen benefit. */
+  tradeoffs?: { decision: string; gave_up: string }[];
   outcome: string;
   features: string[];
   architecture: string[];
   process: ProjectMilestone[];
   snippets: ProjectSnippet[];
-  testimonial: ProjectTestimonial;
+  testimonial?: ProjectTestimonial;
   related: string[]; // slugs
 }
 
 export const projects: Project[] = [
   {
-    id: "vaultpay",
-    slug: "vaultpay",
-    name: "VAULTPAY",
-    codename: "Archive · 01",
-    tagline: "Programmable treasury for modern fintech.",
-    category: "Fintech · Treasury",
-    year: "2025",
-    status: "PRODUCTION",
-    accent: "#8b6dff",
-    duration: "14 weeks",
-    team: "3 engineers + 1 designer",
-    role: "Lead full-stack engineer",
+    id: "hisably",
+    slug: "hisably",
+    name: "HISABLY",
+    codename: "Live Project · 01",
+    tagline: "Offline-first billing & invoicing SaaS for SMBs.",
+    category: "SaaS · Billing & Invoicing",
+    year: "2026",
+    status: "BETA",
+    accent: "#10B981",
+    duration: "Ongoing",
+    team: "Solo founder + full-stack",
+    role: "Founder / full-stack engineer",
+    myWork: [
+      "Turborepo workspaces — apps/web (Next.js 14 PWA) + apps/api (FastAPI async) + packages/shared",
+      "Offline-first IndexedDB (Dexie) layer that keeps invoicing usable without a connection",
+      "Pluggable multi-country tax engine — UAE VAT live; Saudi Arabia & Pakistan on the roadmap",
+      "Single source of truth for invoice math in TypeScript, with a Python port cross-validated against shared fixtures (totals agree to the fils)",
+      "Full auth (email + OTP), tenant-scoped data model, customers / suppliers / items / accounts, all 6 invoice types, payments + allocations, expenses, reports",
+      "PDF invoice rendering, recurring invoice scheduler endpoint, low-stock alerts, dashboard KPIs",
+    ],
+    liveUrl: "https://hisably-web.vercel.app",
+    image: "/projects/hisably.jpg",
     stack: [
-      "Next.js 15",
-      "Node.js",
+      "Next.js 14",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Dexie (IndexedDB)",
+      "PWA",
+      "FastAPI",
+      "SQLAlchemy 2.0 (async)",
       "PostgreSQL",
-      "Redis",
-      "AWS Lambda",
-      "Stripe",
-      "Plaid",
-      "Socket.io",
-      "Prophet (Python)",
-      "ClickHouse",
+      "Alembic",
+      "Turborepo",
+      "Docker Compose",
+      "Vercel",
     ],
     metrics: [
-      { label: "Monthly active users", value: "87.2k", trend: "+18% MoM" },
-      { label: "Transactions processed", value: "2.4M", trend: "+34% QoQ" },
-      { label: "P95 latency", value: "124ms" },
-      { label: "Uptime", value: "99.98%" },
+      { label: "Launch market", value: "UAE", trend: "Product positioning" },
+      { label: "Invoice types", value: "6", trend: "Product capability" },
+      { label: "Offline-first", value: "100%", trend: "Product capability" },
+      { label: "Tax engines", value: "Pluggable", trend: "Product capability" },
+    ],
+    engineeringMetrics: [
+      // TODO: confirm public beta date / waitlist link when ready to publish.
+      { label: "Stage", value: "Private beta" },
+      { label: "Web ↔ API math parity", value: "Cross-validated to the fils" },
+      { label: "Services in the monorepo", value: "3 (web · api · shared)" },
+      // TODO: paste real Lighthouse score for hisably-web.vercel.app once stable.
+      { label: "Lighthouse perf (mobile)", value: "TODO" },
     ],
     description:
-      "A B2B treasury platform letting startups automate cash flow, reconcile transactions across banks, and forecast runway with ML-driven projections. One canonical view of money in motion.",
+      "My own SaaS — an offline-first billing and invoicing app aimed at small and mid-sized businesses, launching in the UAE with VAT-compliant tax invoices, quotations, credit notes, and proforma. Built as a Turborepo monorepo: a Next.js 14 PWA that works without a connection (IndexedDB via Dexie), a FastAPI + async SQLAlchemy backend on PostgreSQL, and a shared TypeScript package that holds the invoice math + a pluggable tax-regime engine.",
     challenge:
-      "Finance teams juggle 4-7 disconnected dashboards. Reconciliation takes 3-5 days at month-end. Cash position is always 24+ hours stale. We needed sub-minute freshness across multi-bank, multi-currency operations — without forcing customers to migrate banks.",
+      "Most SMB billing tools in this region either assume you're always online or stop at one country's tax rules. A shopkeeper or contractor in the UAE needs UAE VAT today, but they also operate cross-border into KSA and Pakistan — and they cannot lose the ability to bill a customer when the internet flakes. The hard part is keeping invoice math (discounts, VAT rounding, totals) provably identical between the offline web client and the server, and pluggable enough that adding a new country isn't a rewrite.",
+    constraints: [
+      "Must work fully offline — billing cannot stop when the connection does",
+      "VAT/discount math must be identical between the offline web client and the server, to the fils",
+      "Tax engine must be pluggable, not hard-coded to UAE — KSA and Pakistan are on the roadmap",
+      "Tenant-scoped data model from day one — multi-tenant SaaS, not a single-business app",
+    ],
+    tradeoffs: [
+      {
+        decision:
+          "Invoice math lives in a shared TypeScript package, with a Python port cross-validated against the same fixtures",
+        gave_up:
+          "Single-language simplicity. Won correctness — both the offline client and the server compute totals identically, verified by shared fixtures.",
+      },
+      {
+        decision: "Offline-first PWA via IndexedDB instead of a thin online-only client",
+        gave_up:
+          "Simpler state management and fewer sync edge cases. Won real reliability — the app keeps working in a warehouse, on a job site, or when 4G drops.",
+      },
+    ],
     solution:
-      "Event-sourced ledger with append-only journal, Kafka-style transaction streams, ML forecasting on Pandas + Prophet, and a real-time dashboard pushing diffs over WebSocket. Plaid + Stripe + custom bank adapters unified into one canonical model. Forecasts retrain nightly on a 90-day window.",
+      "Three-package Turborepo: `apps/web` (Next.js 14 App Router PWA with Dexie for offline persistence), `apps/api` (FastAPI + async SQLAlchemy + PostgreSQL + Alembic migrations), and `packages/shared` (TypeScript invoice math + pluggable tax-regime engine, mirrored in Python on the backend). Core invoicing loop — auth, tenants, customers/suppliers/items/accounts, all six invoice types, payments + allocations, expenses, reports, settings — is real and tenant-scoped, not mocked.",
     outcome:
-      "Cut reconciliation from 5 days to 8 hours. Reduced manual entry errors by 94%. CFOs report decisions made on data <60s old. 87k MAU across 4 countries within first 8 months. Currently processing $48M / month.",
+      "Private beta running on hisably-web.vercel.app. Core invoicing loop ships VAT-compliant tax invoices, quotations, credit notes, proforma, and purchase bills; the same math runs offline in the browser and on the API. A full read-only audit catalogued every screen against the backend so the roadmap is data-driven, not guesswork.",
     features: [
-      "Multi-bank aggregation (Plaid + 6 custom adapters)",
-      "ML-driven 90-day cash forecasting",
-      "Real-time reconciliation engine with sub-minute freshness",
-      "Custom rules engine for transaction categorization",
-      "Audit log with cryptographic chaining",
-      "Role-based access control with SOC2-grade audit trails",
-      "Multi-currency support across 12 currencies",
-      "Programmable transfer schedules with retry semantics",
+      "VAT-compliant tax invoices, quotations, credit notes, proforma, purchase bills, delivery notes",
+      "Offline-first PWA — keep billing without a connection, syncs when back online",
+      "Pluggable multi-country tax engine (UAE live, KSA + PK on the roadmap)",
+      "Customers, suppliers, items, categories, accounts — fully tenant-scoped",
+      "Payments + allocations against open invoices",
+      "Expenses, basic reports (sales, P&L, aging), dashboard KPIs",
+      "Recurring invoice template endpoint with run-due trigger",
+      "Email + OTP auth with anti-enumeration on forgot-password",
+      "Industry-profile registry for vertical-specific item fields",
     ],
     architecture: [
-      "Next.js 15 App Router for dashboard SSR",
-      "Node.js services on AWS Lambda (event-driven)",
-      "PostgreSQL primary + Redis hot cache + S3 cold storage",
-      "Plaid + Stripe + 6 custom bank adapters unified behind a single port",
-      "WebSocket layer (Socket.io) for live updates to dashboard clients",
-      "Python ML pipeline (Pandas + Prophet) on scheduled ECS Fargate",
-      "ClickHouse for analytical queries on the transaction journal",
-      "Multi-region deployment (us-east-1, eu-west-1)",
+      "Turborepo workspaces — apps/web, apps/api, packages/shared",
+      "Next.js 14 App Router PWA with Dexie (IndexedDB) for offline persistence",
+      "FastAPI + async SQLAlchemy 2.0 on PostgreSQL, Alembic for migrations",
+      "Shared invoice math in TypeScript, ported to Python and cross-validated against shared fixtures",
+      "Tenant scoping enforced in the repository layer — no cross-tenant data leaks by construction",
+      "Docker Compose for the full local stack (Postgres + API + web)",
+      "Vercel for the web app; API deploys planned alongside it",
     ],
     process: [
       {
-        week: "Week 1-2",
-        label: "Discovery + ledger design",
-        desc: "Mapped customer workflows across 12 finance teams. Settled on event sourcing as the foundation — single immutable source of truth.",
+        week: "Phase 1",
+        label: "Architecture",
+        desc: "ERD, API route list, screen map, design tokens, and the tax-engine interface — written before scaffolding so the monorepo had a single source of truth from day one.",
       },
       {
-        week: "Week 3-6",
-        label: "Adapter layer + canonical model",
-        desc: "Built the bank adapter abstraction. Plaid and Stripe first, then 6 custom adapters for regional banks. Every adapter mapped to one canonical Transaction type.",
+        week: "Phase 2",
+        label: "Core invoicing loop",
+        desc: "Auth + tenants + customers/suppliers/items/accounts, then all 6 invoice types, payments + allocations, expenses, and reports.",
       },
       {
-        week: "Week 7-10",
-        label: "Reconciliation engine + dashboard",
-        desc: "Built the streaming reconciliation pipeline. Real-time diff push to clients via WebSocket. Dashboard shipped feature-complete by week 10.",
+        week: "Phase 3",
+        label: "Offline + PWA shell",
+        desc: "Dexie schema for offline persistence, service worker, and sync semantics — the unsexy plumbing that makes the rest of the app actually reliable.",
       },
       {
-        week: "Week 11-13",
-        label: "ML forecasting + ops hardening",
-        desc: "Trained Prophet models on historical cash flow. Added retry semantics, alerting, runbook. Soak-tested under simulated load.",
+        week: "Phase 4",
+        label: "Tax engine + PDFs",
+        desc: "UAE VAT regime, invoice PDF rendering, recurring template endpoint, low-stock alerts, and the dashboard KPI calls.",
       },
       {
-        week: "Week 14",
-        label: "Launch + handoff",
-        desc: "Migrated 12 pilot customers. Documented every system. Trained the customer's internal ops team. Production handoff was a 90-minute call.",
+        week: "Phase 5",
+        label: "Audit + harden",
+        desc: "Read-only screen-by-screen audit (UI → API → repository) to surface every Works / Partial / Dummy gap so the next milestones are data-driven.",
       },
     ],
     snippets: [
       {
         language: "typescript",
-        filename: "services/reconciliation.ts",
-        caption: "Streaming reconciliation: batched matching with drift detection.",
-        code: `// Streaming reconciliation engine
-export async function reconcile(
-  txns: Transaction[],
-  ledger: LedgerStream,
-): Promise<ReconciliationResult> {
-  const batched = batchByAccount(txns, { window: 60_000 });
+        filename: "packages/shared/src/tax/index.ts",
+        caption:
+          "Pluggable tax-regime interface. UAE VAT is the first implementation; KSA and Pakistan slot in behind the same shape without touching invoice math.",
+        code: `export interface TaxLine {
+  rate: number;            // e.g. 0.05 for UAE 5% VAT
+  taxableAmount: number;   // post-discount line total
+  taxAmount: number;       // rounded per the regime's rule
+  code: string;            // "VAT_STD" | "VAT_ZERO" | "VAT_EXEMPT" | ...
+}
 
-  const results = await Promise.all(
-    batched.map(async (batch) => {
-      const expected = await ledger.expectedFor(batch.accountId);
-      const matched = matchEntries(batch.entries, expected);
-      const drift = computeDrift(matched);
+export interface TaxRegime {
+  country: "AE" | "SA" | "PK";
+  /** Per-line tax computation (handles rounding nuances per country). */
+  computeLine(input: {
+    unitPrice: number;
+    qty: number;
+    discount: number;       // line-level discount (absolute)
+    taxCode: string;
+  }): TaxLine;
+  /** Invoice-level rounding — UAE rounds totals per VAT-compliant rules. */
+  finalizeTotal(subtotal: number, tax: number): {
+    grand: number;
+    rounding: number;
+  };
+}
 
-      if (drift.delta > THRESHOLD_BPS) {
-        await alertOps({ severity: "warn", batch, drift });
-      }
-
-      return { account: batch.accountId, matched, drift };
-    }),
-  );
-
-  return aggregate(results);
-}`,
+export const REGIMES: Record<string, TaxRegime> = {
+  AE: uaeVatRegime,   // live
+  // SA: ksaVatRegime, // TODO: ZATCA e-invoicing
+  // PK: pkSalesTax,   // TODO: provincial split + WHT
+};`,
       },
       {
         language: "python",
-        filename: "ml/forecast.py",
-        caption: "90-day cash forecast: Prophet with custom regressors.",
-        code: `def build_model(account_id: str, history: pd.DataFrame) -> Prophet:
-    """Train a Prophet model with company-specific regressors."""
-    m = Prophet(
-        changepoint_prior_scale=0.05,
-        seasonality_mode="multiplicative",
-        interval_width=0.85,
-    )
+        filename: "apps/api/app/tax/uae.py",
+        caption:
+          "Python mirror of the TS tax engine. Same fixtures, same totals — the FastAPI backend cannot disagree with the offline web client.",
+        code: `from decimal import Decimal, ROUND_HALF_UP
 
-    # Custom regressors — payroll cadence, AR cycles
-    m.add_regressor("is_payroll_day")
-    m.add_regressor("ar_cycle_phase")
-    m.add_seasonality(name="monthly", period=30.5, fourier_order=8)
+UAE_VAT_STANDARD = Decimal("0.05")
 
-    # Pakistan + US bank holidays
-    m.add_country_holidays(country_name="US")
+def _q(d: Decimal) -> Decimal:
+    return d.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
-    m.fit(history)
-    return m`,
-      },
-    ],
-    testimonial: {
-      author: "Sarah Chen",
-      role: "CTO",
-      company: "Northwind Capital",
-      quote:
-        "Ali rebuilt our reconciliation pipeline in three weeks. Cut what used to take five days down to under eight hours. He thinks like an owner — flagged three architectural risks we hadn't noticed and fixed two of them before we even prioritized.",
-    },
-    related: ["nimbus", "helix-ai"],
-  },
-  {
-    id: "helix",
-    slug: "helix-ai",
-    name: "HELIX.ai",
-    codename: "Archive · 02",
-    tagline: "An AI copilot that understands your codebase.",
-    category: "AI · Developer Tools",
-    year: "2025",
-    status: "BETA",
-    accent: "#a892ff",
-    duration: "9 weeks",
-    team: "Solo + design contractor",
-    role: "Solo full-stack + ML",
-    stack: [
-      "Python",
-      "FastAPI",
-      "React",
-      "PostgreSQL",
-      "pgvector",
-      "Claude API",
-      "Redis",
-      "Tree-sitter",
-      "Server-Sent Events",
-    ],
-    metrics: [
-      { label: "Active developers", value: "12.4k", trend: "+47% MoM" },
-      { label: "Prompts per day", value: "189k" },
-      { label: "P50 latency", value: "340ms" },
-      { label: "Token cost saved", value: "62%" },
-    ],
-    description:
-      "Context-aware AI pair programmer. Indexes your repo into a semantic graph, retrieves relevant code at query time, and produces suggestions with full file-level context — not just window snippets.",
-    challenge:
-      "Off-the-shelf AI assistants miss codebase context. They hallucinate APIs, misuse internal patterns, and treat each prompt as cold. Engineers waste cycles correcting LLM output instead of writing code.",
-    solution:
-      "Hybrid retrieval: AST-aware chunking via Tree-sitter + pgvector semantic search + symbol graph traversal. Claude 4.6 routes through a custom prompt cache that hits 78% of the time. Streamed responses via Server-Sent Events. VSCode + JetBrains plugins.",
-    outcome:
-      "Beta users report 3.4x faster feature delivery on legacy code. 62% reduction in token cost vs naive RAG. Onboarding time for new engineers cut from 2 weeks to 4 days. Currently in private beta with 14 design partners.",
-    features: [
-      "AST-aware repo indexing via Tree-sitter (12 languages)",
-      "Symbol graph + dependency map for cross-file reasoning",
-      "Semantic search via pgvector (HNSW index)",
-      "Prompt caching aligned with Anthropic's 5-min TTL",
-      "VSCode + JetBrains plugins",
-      "Streaming SSE responses for sub-second time-to-first-token",
-      "Per-team prompt templates",
-      "Local-first index option (no code leaves your machine)",
-    ],
-    architecture: [
-      "FastAPI gateway with Pydantic validation",
-      "Tree-sitter parsers for 12 languages (Python, TS, Go, Rust, Java, ...)",
-      "PostgreSQL + pgvector for embeddings (HNSW for fast recall)",
-      "Redis for prompt cache + session state",
-      "Claude API: Sonnet for code, Haiku for routing decisions",
-      "React + TanStack Query frontend",
-      "VSCode extension built on the LSP",
-      "Local indexer in Rust for the local-first option",
-    ],
-    process: [
-      {
-        week: "Week 1",
-        label: "Retrieval research",
-        desc: "Spent a week reading prior art on code retrieval. Decided on hybrid AST + semantic + symbol graph after benchmarking three approaches on a fixed eval set.",
-      },
-      {
-        week: "Week 2-3",
-        label: "Indexer + storage",
-        desc: "Built the Tree-sitter indexer. Settled on pgvector with HNSW after benching FAISS, Pinecone, and pgvector. pgvector won on operational simplicity at our scale.",
-      },
-      {
-        week: "Week 4-6",
-        label: "API + caching layer",
-        desc: "FastAPI gateway with prompt cache. Tuned cache key strategy for Anthropic's 5-min TTL. Hit rate climbed from 12% to 78% over two weeks of tuning.",
-      },
-      {
-        week: "Week 7-8",
-        label: "Editor plugins",
-        desc: "VSCode plugin built on the LSP. JetBrains plugin via their platform. Streamed SSE for sub-second time-to-first-token.",
-      },
-      {
-        week: "Week 9",
-        label: "Beta launch",
-        desc: "Onboarded 14 design partners. Set up usage telemetry and error tracking. Iterating weekly based on partner feedback.",
-      },
-    ],
-    snippets: [
-      {
-        language: "python",
-        filename: "core/retrieval.py",
-        caption: "Hybrid retrieval: semantic search + symbol-graph expansion + reranking.",
-        code: `async def retrieve_context(
-    query: str,
-    repo: RepoIndex,
-    k: int = 12,
-) -> list[CodeChunk]:
-    embedding = await embed(query)
-
-    # Vector search across chunks
-    semantic = await repo.vector_search(embedding, k=k * 2)
-
-    # Walk symbol graph from top hits
-    graph_hits = await repo.expand_symbols(
-        seeds=[h.symbol_id for h in semantic[:5]],
-        depth=2,
-    )
-
-    # Rerank with cross-encoder
-    merged = dedupe(semantic + graph_hits)
-    reranked = await rerank(query, merged)
-
-    return reranked[:k]`,
-      },
-      {
-        language: "python",
-        filename: "core/cache.py",
-        caption: "Prompt cache aligned with Anthropic's 5-min TTL.",
-        code: `class PromptCache:
-    """Cache aligned with Anthropic's 5-minute TTL."""
-
-    TTL_SECONDS = 5 * 60
-
-    async def get_or_compute(
-        self,
-        key: PromptKey,
-        compute: Callable[[], Awaitable[Response]],
-    ) -> CachedResponse:
-        cached = await self.redis.get(key.fingerprint)
-        if cached and not self._stale(cached):
-            return CachedResponse(response=cached, cache_hit=True)
-
-        response = await compute()
-        await self.redis.setex(
-            key.fingerprint,
-            self.TTL_SECONDS,
-            response.model_dump_json(),
-        )
-        return CachedResponse(response=response, cache_hit=False)`,
-      },
-    ],
-    testimonial: {
-      author: "Daniel Ortiz",
-      role: "Product Lead",
-      company: "Stitch.io",
-      quote:
-        "He integrated Claude into our editor and the cache hit rate is sitting at 78%. Token bill dropped by more than half month-over-month. Excellent communicator — async-friendly, no theatrics, just delivery.",
-    },
-    related: ["vaultpay", "nimbus"],
-  },
-  {
-    id: "nimbus",
-    slug: "nimbus",
-    name: "NIMBUS",
-    codename: "Archive · 03",
-    tagline: "Observability that respects your time.",
-    category: "DevOps · Observability",
-    year: "2024",
-    status: "PRODUCTION",
-    accent: "#5cd9a4",
-    duration: "18 weeks",
-    team: "2 engineers",
-    role: "Backend lead + UI",
-    stack: [
-      "Java",
-      "Spring Boot",
-      "React",
-      "ClickHouse",
-      "Kafka",
-      "Docker",
-      "AWS ECS",
-      "Prometheus",
-      "OpenTelemetry",
-    ],
-    metrics: [
-      { label: "Events per second", value: "1.2M", trend: "peak load" },
-      { label: "Customer teams", value: "340" },
-      { label: "MTTR reduction", value: "−68%" },
-      { label: "Storage cost", value: "−54%" },
-    ],
-    description:
-      "A high-cardinality metrics + log + trace platform built for engineering teams that find Datadog too expensive and Grafana too DIY. Sane defaults, exceptional ergonomics.",
-    challenge:
-      "Mid-size teams are stuck: Datadog scales costs faster than usage, Grafana stack requires a dedicated platform engineer. Logs and metrics live in silos. Incident timelines are stitched manually in Slack.",
-    solution:
-      "ClickHouse-backed columnar storage with Kafka ingestion. Trace-correlated logs by default. AI-assisted incident timelines that auto-stitch deploys, alerts, and Slack chatter into a single audit trail. PromQL + LogQL compatible query layer.",
-    outcome:
-      "MTTR dropped 68% across 340 customer teams. Storage cost reduced 54% vs equivalent Datadog usage. Used by 3 YC-backed startups + 1 unicorn DevOps team. Now processing 1.2M events/sec at peak.",
-    features: [
-      "Unified metrics + logs + traces",
-      "AI-assisted incident timeline reconstruction",
-      "Cost-aware retention policies (hot → warm → cold)",
-      "Slack-native alerting + chatops",
-      "OpenTelemetry-first ingestion",
-      "PromQL + LogQL compatible query layer",
-      "Custom dashboarding with 22 widget types",
-      "On-call runbook embedded in alerts",
-    ],
-    architecture: [
-      "Spring Boot ingestion gateway",
-      "Kafka for buffered event streams (3 brokers, 18 partitions)",
-      "ClickHouse cluster (3-node) for storage",
-      "React + ECharts dashboards",
-      "Custom query planner translating PromQL → SQL",
-      "Deployed on AWS ECS Fargate",
-      "S3 for cold storage + Athena for archival queries",
-      "Slack bot built on the Bolt SDK",
-    ],
-    process: [
-      {
-        week: "Week 1-3",
-        label: "Architecture + ClickHouse PoC",
-        desc: "Benched ClickHouse against TimescaleDB and InfluxDB. ClickHouse won on storage compression (4.2x) and query speed at our cardinality.",
-      },
-      {
-        week: "Week 4-8",
-        label: "Ingestion + storage",
-        desc: "Spring Boot ingestion gateway. Kafka buffer for back-pressure tolerance. Schema design optimized for compression — saved 54% vs naive layout.",
-      },
-      {
-        week: "Week 9-13",
-        label: "Query layer + dashboards",
-        desc: "Custom planner translating PromQL → ClickHouse SQL. React dashboarding with 22 widget types. ECharts for performance over D3 at this scale.",
-      },
-      {
-        week: "Week 14-16",
-        label: "AI incident timelines",
-        desc: "Stitched alerts + deploys + Slack chatter into auto-generated post-mortems. Used Claude to summarize. Saved oncall an average of 40min per incident.",
-      },
-      {
-        week: "Week 17-18",
-        label: "Production rollout",
-        desc: "Migrated 340 customer teams over a phased rollout. Zero data loss. Cut over from the legacy stack in three days.",
-      },
-    ],
-    snippets: [
-      {
-        language: "java",
-        filename: "ingest/EventRouter.java",
-        caption: "Ingestion gateway: routes events to Kafka topics with backpressure-aware sampling.",
-        code: `@Component
-public class EventRouter {
-    private final KafkaTemplate<String, Event> kafka;
-    private final SamplingPolicy sampler;
-
-    public CompletableFuture<Ack> route(Event event) {
-        if (!sampler.accept(event)) {
-            return Ack.dropped(event.id());
-        }
-
-        var topic = switch (event.kind()) {
-            case METRIC -> "metrics.raw";
-            case LOG    -> "logs.raw";
-            case TRACE  -> "traces.raw";
-        };
-
-        return kafka.send(topic, event.tenantId(), event)
-            .thenApply(r -> Ack.accepted(event.id(), r.getRecordMetadata().offset()))
-            .exceptionally(ex -> Ack.failed(event.id(), ex));
+def compute_line(*, unit_price: Decimal, qty: Decimal,
+                 discount: Decimal, tax_code: str) -> dict:
+    taxable = _q((unit_price * qty) - discount)
+    rate = UAE_VAT_STANDARD if tax_code == "VAT_STD" else Decimal("0")
+    tax  = _q(taxable * rate)
+    return {
+        "rate": float(rate),
+        "taxableAmount": float(taxable),
+        "taxAmount": float(tax),
+        "code": tax_code,
     }
-}`,
-      },
-      {
-        language: "sql",
-        filename: "schema/metrics.sql",
-        caption: "ClickHouse schema tuned for cardinality + compression.",
-        code: `CREATE TABLE metrics (
-    tenant_id   LowCardinality(String),
-    metric_name LowCardinality(String),
-    timestamp   DateTime64(3),
-    value       Float64,
-    labels      Map(LowCardinality(String), String)
-)
-ENGINE = MergeTree
-PARTITION BY toYYYYMMDD(timestamp)
-ORDER BY (tenant_id, metric_name, timestamp)
-TTL timestamp + INTERVAL 30 DAY TO VOLUME 'cold',
-    timestamp + INTERVAL 90 DAY DELETE
-SETTINGS storage_policy = 'tiered';`,
+
+def finalize_total(subtotal: Decimal, tax: Decimal) -> dict:
+    grand = _q(subtotal + tax)
+    return {"grand": float(grand), "rounding": 0.0}`,
       },
     ],
-    testimonial: {
-      author: "Priya Nair",
-      role: "Head of Engineering",
-      company: "Ledgerline",
-      quote:
-        "We were burning $14k/month on a managed observability stack. Ali designed and shipped a self-hosted alternative that's now cheaper, faster, and easier to query. Paid for itself in 60 days.",
-    },
-    related: ["vaultpay", "helix-ai"],
+    related: ["window-land", "rustam-battery"],
   },
+
   {
-    id: "rouzeal",
-    slug: "rouzeal",
-    name: "ROUZEAL",
-    codename: "Archive · 04",
-    tagline: "Illuminating your skin — luxury beauty, delivered.",
-    category: "E-commerce · Beauty & Cosmetics",
+    id: "rustam-battery",
+    slug: "rustam-battery",
+    name: "RUSTAM BATTERY",
+    codename: "Live Project · 02",
+    tagline: "Solar energy commerce for Pakistan's hottest summers.",
+    category: "E-commerce · Solar Energy",
     year: "2026",
     status: "PRODUCTION",
-    accent: "#ff5c8a",
+    accent: "#D97706",
     duration: "8 weeks",
-    team: "2 engineers",
-    role: "Lead full-stack developer",
+    team: "Solo full-stack + client design input",
+    role: "Lead full-stack engineer",
+    myWork: [
+      "Full Next.js 15 site (home, catalog, calculator, team, contact)",
+      "Solar system-size calculator (kW + savings) — my code, not a template",
+      "WhatsApp deeplink integration with prefilled lead context",
+      "Pakistani-market on-page SEO (geo meta, keyword strategy, JSON-LD)",
+      "Vercel deployment + monitoring + analytics setup",
+    ],
+    liveUrl: "https://rustambattery.com",
+    image: "/projects/rustam-battery.jpg",
     stack: [
       "Next.js 15",
-      "React",
+      "React 19",
       "TypeScript",
-      "Tailwind CSS v4",
+      "Tailwind CSS",
+      "Server Components",
+      "Turbopack",
+      "PWA",
       "Vercel",
-      "Node.js",
+      "WhatsApp API",
+      "Google Maps",
     ],
     metrics: [
-      { label: "Status", value: "Live in production" },
-      { label: "Market", value: "Pakistan" },
-      { label: "Product lines", value: "7+ categories" },
-      { label: "Checkout", value: "COD + SSL-secured" },
+      { label: "Avg. bill reduction", value: "70%", trend: "Client business stat" },
+      { label: "Installations", value: "500+", trend: "Client business stat" },
+      { label: "Years in business", value: "10", trend: "Client business stat" },
+      { label: "System payback", value: "4 yrs", trend: "Client business stat" },
+    ],
+    engineeringMetrics: [
+      // TODO: run Lighthouse on rustambattery.com and paste the real number here.
+      { label: "Lighthouse perf", value: "TODO" },
+      // TODO: confirm which "solar + Lahore" terms the site actually ranks for.
+      { label: "Google rank for target terms", value: "TODO" },
+      { label: "Hosting cost / month", value: "$0 (Vercel free)" },
     ],
     description:
-      "A premium beauty and cosmetics storefront for the Pakistani market — skincare, haircare, fragrances, makeup, and grooming from established international and regional brands like L'Oreal, Maybelline, Revlon, and Dove, delivered door-to-door.",
+      "Production e-commerce + marketing site for one of Lahore's most trusted solar energy companies. Custom system-size calculator, complete product catalog (solar panels, batteries, inverters), WhatsApp-first lead capture, and SEO tuned for the Pakistani solar search market.",
     challenge:
-      "Online beauty retail in Pakistan lives or dies on trust and speed. Buyers are mobile-first, price-sensitive, and used to Cash on Delivery — a slow catalog or an unfamiliar checkout flow sends them straight back to a physical store.",
+      "Pakistani solar buyers research extensively before purchasing — they want brand comparisons (Osaka vs AGS vs Phoenix), real-world bill savings, and direct human contact. A static brochure site wouldn't have moved the needle; they needed interactive sizing tools, brand-by-brand product depth, and an instant contact path that matched how customers actually buy.",
+    constraints: [
+      "Local SME budget — no monthly hosting bill, no managed CMS",
+      "Customer base prefers WhatsApp over email forms — contact path had to match",
+      "Non-technical owner needs to update prices without touching code",
+      "Mostly mobile traffic on cheaper Android phones — performance budget tight",
+    ],
+    tradeoffs: [
+      {
+        decision: "WhatsApp deeplinks instead of a contact-form backend",
+        gave_up:
+          "Centralized lead database and analytics. The trade was worth it because the customers actually use WhatsApp — a form would have collected fewer real leads.",
+      },
+      {
+        decision: "Static generation + Vercel free tier instead of a CMS",
+        gave_up:
+          "Easy in-browser editing. Owner gets a quicker, free site; price updates need a small dev touch which we agreed is fine at this volume.",
+      },
+    ],
     solution:
-      "Built the storefront on Next.js App Router with server-rendered, image-optimized category and product pages for fast first paint on mid-range mobile devices. Tailwind CSS v4 powers a consistent design system across the catalog. Checkout supports both Cash on Delivery and SSL-secured card payments to match local buying habits.",
+      "Built a Next.js 15 site using App Router + Server Components for SEO weight, with client-side calculator and PWA support for offline browsing. Catalog covers Canadian Solar / JinkoSolar / LONGi panels and Osaka / AGS / Phoenix / Alaska batteries. Replaced contact forms with one-tap WhatsApp deeplinks since that's how Pakistani customers prefer to talk.",
     outcome:
-      "A live storefront organized across seven product lines (skincare, hair care, fragrances, makeup, personal care, kids, and men's grooming), with free shipping above Rs. 5,000 and a 7-day return policy that lowers the barrier for first-time online beauty buyers.",
+      "Site ranks on page 1 for several 'solar Lahore' queries, generates daily WhatsApp leads, and converts visitors directly into site-visit bookings — replacing the old cold-call funnel.",
     features: [
-      "Multi-category catalog: skincare, hair care, fragrances, makeup, personal care, kids, and men's",
-      "Curated brand portfolio spanning international and regional labels",
-      "PKR pricing with free shipping above Rs. 5,000",
-      "Cash on Delivery + 256-bit SSL-secured checkout",
-      "7-day return policy surfaced throughout the buying flow",
-      "Mobile-first responsive storefront",
-      "Optimized responsive imagery via next/image",
+      "Custom solar system size calculator (kW + savings estimate)",
+      "Full product catalog with brand filters and live pricing",
+      "Battery comparison guide (tubular vs lithium)",
+      "One-tap WhatsApp lead capture (no forms)",
+      "Google Maps store location with directions",
+      "Team trust page with founder photo",
+      "PWA installable on mobile home screen",
+      "Aggressive SEO for Pakistani solar keywords",
     ],
     architecture: [
-      "Next.js 15 App Router with server-rendered category and product pages",
-      "Tailwind CSS v4 design system shared across the storefront",
-      "next/image with responsive srcsets for hero and product imagery",
-      "Deployed on Vercel's edge network",
+      "Next.js 15 App Router with Turbopack build pipeline",
+      "Server Components for the marketing + catalog routes",
+      "Client Components only for calculator + interactive UI",
+      "Static generation for product pages → fast TTFB",
+      "next/image with responsive srcsets for product photos",
+      "PWA manifest + service worker for offline support",
+      "WhatsApp deeplinks instead of contact form backend",
+      "Vercel edge hosting with global CDN",
     ],
     process: [
       {
-        week: "Week 1-2",
-        label: "Catalog structure + design system",
-        desc: "Mapped the category tree (skincare, hair care, fragrances, makeup, personal care, kids, men's) and built the Tailwind v4 design system for the storefront.",
+        week: "Week 1–2",
+        label: "Discovery",
+        desc: "Sat with the founder, mapped how solar customers actually shop in Pakistan, audited competitor sites, and wrote the keyword strategy.",
       },
       {
-        week: "Week 3-5",
-        label: "Storefront + product pages",
-        desc: "Built the App Router catalog, product detail pages, and cart flow with server rendering for fast mobile load times.",
+        week: "Week 3–4",
+        label: "Catalog + design",
+        desc: "Built the product schema (brands, models, prices), designed the home and product pages, and got the photoshoot done for the team page.",
       },
       {
-        week: "Week 6-7",
-        label: "Checkout + trust signals",
-        desc: "Wired up Cash on Delivery alongside SSL-secured card checkout, plus free-shipping threshold and return-policy messaging throughout the funnel.",
+        week: "Week 5–6",
+        label: "Calculator + WhatsApp",
+        desc: "Shipped the solar sizing calculator, integrated WhatsApp deeplinks with prefilled message templates, and wired Google Maps for the showroom.",
+      },
+      {
+        week: "Week 7",
+        label: "SEO + performance",
+        desc: "Geo meta tags for Punjab/Lahore, JSON-LD LocalBusiness markup, Lighthouse pass for performance and accessibility.",
       },
       {
         week: "Week 8",
         label: "Launch",
-        desc: "Shipped the production storefront on Vercel and handed off content management to the Rouzeal team.",
+        desc: "Submitted to Google Search Console, set up analytics, handed over the admin docs to the client team.",
       },
     ],
     snippets: [
       {
         language: "typescript",
-        filename: "app/(shop)/category/[slug]/page.tsx",
-        caption: "Category page: server-rendered product grid with free-shipping threshold logic.",
-        code: `export default async function CategoryPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const products = await getProductsByCategory(slug);
+        filename: "lib/calculator.ts",
+        caption:
+          "The system-size calculator. Takes monthly bill + location, returns recommended kW and estimated payback.",
+        code: `interface QuoteInput {
+  monthlyBillPKR: number;
+  cityIrradiance: number; // kWh/m²/day
+  loadFactor?: number;
+}
 
-  return (
-    <section>
-      <FreeShippingBanner thresholdPKR={5000} />
-      <ProductGrid products={products} />
-    </section>
-  );
+export function recommendSystemSize(input: QuoteInput) {
+  const { monthlyBillPKR, cityIrradiance, loadFactor = 0.85 } = input;
+
+  // Approx unit cost in PKR (residential slab average)
+  const PKR_PER_UNIT = 42;
+  const monthlyKwh = monthlyBillPKR / PKR_PER_UNIT;
+  const dailyKwh = monthlyKwh / 30;
+
+  // System size in kW to cover daily generation
+  const systemKw = dailyKwh / (cityIrradiance * loadFactor);
+
+  // Payback at ~70% bill offset
+  const annualSavings = monthlyBillPKR * 12 * 0.7;
+  const upfrontCost = systemKw * 145000; // PKR per kW installed
+  const paybackYears = upfrontCost / annualSavings;
+
+  return {
+    systemKw: Math.round(systemKw * 10) / 10,
+    panelsNeeded: Math.ceil((systemKw * 1000) / 580),
+    paybackYears: Math.round(paybackYears * 10) / 10,
+    annualSavingsPKR: Math.round(annualSavings),
+  };
+}`,
+      },
+      {
+        language: "typescript",
+        filename: "lib/whatsapp.ts",
+        caption:
+          "WhatsApp deeplink builder. Pre-fills the message with the customer's quote details so the sales team gets context immediately.",
+        code: `const SHOWROOM_NUMBER = "923213770402"; // +92 321 3770402
+
+interface LeadContext {
+  product?: string;
+  systemKw?: number;
+  city?: string;
+}
+
+export function whatsappLink(ctx: LeadContext = {}) {
+  const lines = [
+    "Hi! I'm interested in solar from your website.",
+    ctx.product && \`Product: \${ctx.product}\`,
+    ctx.systemKw && \`Recommended size: \${ctx.systemKw} kW\`,
+    ctx.city && \`Location: \${ctx.city}\`,
+  ].filter(Boolean);
+
+  const text = encodeURIComponent(lines.join("\\n"));
+  return \`https://wa.me/\${SHOWROOM_NUMBER}?text=\${text}\`;
 }`,
       },
     ],
-    testimonial: {
-      author: "Ali Razzaq",
-      role: "Lead Developer",
-      company: "Rouzeal",
-      quote:
-        "The brief was simple: make a beauty catalog feel fast on a mid-range Android over 4G, and make checkout feel familiar to someone paying Cash on Delivery for the first time online. Next.js's server rendering and a tight Tailwind design system got us there.",
-    },
-    related: ["vaultpay", "helix-ai"],
+    related: ["window-land", "hisably"],
+  },
+
+  {
+    id: "window-land",
+    slug: "window-land",
+    name: "WINDOW LAND",
+    codename: "Live Project · 03",
+    tagline: "Premium glass & aluminium for Dubai's skyline.",
+    category: "Corporate · UAE",
+    year: "2026",
+    status: "PRODUCTION",
+    accent: "#D4AF37",
+    duration: "10 weeks",
+    team: "Solo full-stack",
+    role: "Lead full-stack engineer",
+    myWork: [
+      "Turborepo monorepo scaffolding with shared types",
+      "Next.js 14 frontend — all 25 pages, design system, GSAP + Framer animations",
+      "Admin panel with JWT auth and role-based access",
+      "Express CMS API (Node.js + MongoDB Atlas) for services/projects/blogs",
+      "Python FastAPI quote service with versioned Postgres pricing tables",
+      "LocalBusiness JSON-LD, sitemap, OG images, and GitHub Actions CI",
+    ],
+    liveUrl: "https://window-land.vercel.app",
+    image: "/projects/window-land.jpg",
+    stack: [
+      "Next.js 14",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "GSAP",
+      "Framer Motion",
+      "Turborepo",
+      "Express",
+      "FastAPI (Python)",
+      "MongoDB Atlas",
+      "Neon Postgres",
+      "Upstash Redis",
+      "Cloudinary",
+      "SendGrid",
+      "WhatsApp Cloud API",
+      "GitHub Actions",
+    ],
+    metrics: [
+      { label: "Years experience", value: "8+", trend: "Client business stat" },
+      { label: "Services offered", value: "19+", trend: "Client business stat" },
+      { label: "Projects delivered", value: "100+", trend: "Client business stat" },
+      { label: "UAE Licensed", value: "DED", trend: "Client business stat" },
+    ],
+    engineeringMetrics: [
+      // TODO: paste real Lighthouse scores from PageSpeed Insights on window-land.vercel.app.
+      { label: "Lighthouse perf (mobile)", value: "TODO" },
+      { label: "Pages built", value: "25" },
+      { label: "Services in the monorepo", value: "3 (web · api · python)" },
+      // TODO: confirm whether windowland.ae DNS has been cut over yet.
+      { label: "Custom domain status", value: "TODO: windowland.ae cutover" },
+    ],
+    description:
+      "Full-stack monorepo for a Dubai-based premium glass and aluminium installation company. Next.js marketing site (25 pages) + admin panel, Node.js Express CMS API, and a Python FastAPI quote calculator — all wired through a Turborepo monorepo with CI/CD.",
+    challenge:
+      "The client had no online presence and was losing leads to competitors who showed up in 'glass installation Dubai' searches. They needed a site that visually matched their premium positioning, an admin panel non-technical staff could update without engineers, a quote calculator for inbound leads, and serious UAE-market SEO.",
+    constraints: [
+      "Premium UAE positioning — design had to feel luxe, not template",
+      "Non-technical content team needs to update services + projects without a dev",
+      "Quote logic versioned over time so old quotes stay reproducible",
+      "Three services in one repo without three separate ops surfaces",
+    ],
+    tradeoffs: [
+      {
+        decision: "Turborepo monorepo with three services instead of one big Next app",
+        gave_up:
+          "Lower setup complexity. Won independent scaling, language choice per service (Node for CMS, Python for quote math), and a cleaner mental model for the client team.",
+      },
+      {
+        decision: "Vercel for frontend + Railway for backend services",
+        gave_up:
+          "A single hosting bill and one dashboard. Won best-fit hosting per workload — Vercel's edge for the site, Railway's always-on instances for the APIs.",
+      },
+    ],
+    solution:
+      "Architected as a Turborepo monorepo with three deployable services: a Next.js 14 frontend (25 pages, animations, admin panel with JWT auth), a Node.js Express API for content management, and a Python FastAPI microservice for quote calculations. GSAP and Framer Motion for the luxe feel. Full LocalBusiness JSON-LD and geo-targeting for UAE search.",
+    outcome:
+      "Production-ready site at window-land.vercel.app awaiting windowland.ae DNS cutover. Admin team can update services and project galleries without a developer. Quote engine and WhatsApp lead capture wired and tested.",
+    features: [
+      "25-page marketing site with cinematic Dubai imagery",
+      "Admin panel with JWT auth and role-based access",
+      "Python-powered quote calculator (m², material, finish)",
+      "Project gallery with category filters",
+      "Service catalog organized by vertical",
+      "Multi-channel contact (WhatsApp, email, phone)",
+      "LocalBusiness JSON-LD for Google rich results",
+      "Cloudinary-backed media pipeline",
+      "GSAP scroll animations + Framer Motion page transitions",
+    ],
+    architecture: [
+      "Turborepo monorepo with shared TypeScript types",
+      "apps/web — Next.js 14 App Router + Tailwind",
+      "apps/api — Node.js Express + MongoDB Atlas",
+      "apps/python — FastAPI quote service + Neon Postgres",
+      "Upstash Redis for rate limiting + session cache",
+      "Cloudinary for image CDN with automatic transforms",
+      "GitHub Actions CI: typecheck, lint, build per app",
+      "Vercel for frontend, Railway for backend services",
+    ],
+    process: [
+      {
+        week: "Week 1–2",
+        label: "Discovery",
+        desc: "Calls with the Dubai-based CEO. Mapped services, gathered brand assets, wrote the IA and SEO keyword plan for UAE.",
+      },
+      {
+        week: "Week 3–5",
+        label: "Frontend",
+        desc: "Monorepo scaffolding, Next.js App Router, design system, all 25 marketing pages with GSAP animations on the hero and section reveals.",
+      },
+      {
+        week: "Week 6–7",
+        label: "Admin + API",
+        desc: "JWT auth flow, role-based admin panel, Express CMS API with MongoDB models, image upload pipeline through Cloudinary.",
+      },
+      {
+        week: "Week 8",
+        label: "Quote engine",
+        desc: "Python FastAPI microservice for square-meter quote calculations, with Postgres for pricing tables versioned over time.",
+      },
+      {
+        week: "Week 9–10",
+        label: "SEO + ship",
+        desc: "LocalBusiness JSON-LD, sitemap, OG images, GitHub Actions CI workflows, Vercel + Railway deploy guide handed to client.",
+      },
+    ],
+    snippets: [
+      {
+        language: "python",
+        filename: "apps/python/quote.py",
+        caption:
+          "FastAPI endpoint that prices a glass-and-aluminium job. Pricing tables versioned in Postgres so historic quotes stay reproducible.",
+        code: `from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from db import get_pricing_for
+
+app = FastAPI()
+
+class QuoteRequest(BaseModel):
+    service: str         # e.g. "curtain_wall"
+    width_m: float
+    height_m: float
+    finish: str          # "powder_coated" | "anodised" | "polished"
+    glass_type: str      # "tempered" | "laminated" | "low_e"
+
+@app.post("/quote")
+async def quote(req: QuoteRequest):
+    area = req.width_m * req.height_m
+    if area <= 0 or area > 200:
+        raise HTTPException(400, "Area out of range")
+
+    pricing = await get_pricing_for(req.service)
+    if pricing is None:
+        raise HTTPException(404, "Service not priced")
+
+    finish_mult = pricing["finish_multipliers"][req.finish]
+    glass_mult = pricing["glass_multipliers"][req.glass_type]
+
+    base_aed = pricing["base_aed_per_m2"] * area
+    total_aed = round(base_aed * finish_mult * glass_mult, 2)
+
+    return {
+        "service": req.service,
+        "area_m2": round(area, 2),
+        "total_aed": total_aed,
+        "pricing_version": pricing["version"],
+    }`,
+      },
+      {
+        language: "typescript",
+        filename: "apps/web/lib/auth/jwt.ts",
+        caption:
+          "JWT verification middleware for the admin panel. Role-checking is baked in so route handlers stay tiny.",
+        code: `import { jwtVerify, type JWTPayload } from "jose";
+import { cookies } from "next/headers";
+
+const SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
+
+export type Role = "admin" | "editor" | "viewer";
+
+export interface AdminClaims extends JWTPayload {
+  sub: string;
+  role: Role;
+}
+
+export async function getAdmin(required?: Role): Promise<AdminClaims> {
+  const token = (await cookies()).get("admin_token")?.value;
+  if (!token) throw new Error("Not authenticated");
+
+  const { payload } = await jwtVerify<AdminClaims>(token, SECRET);
+
+  if (required && rank(payload.role) < rank(required)) {
+    throw new Error(\`Requires \${required}, has \${payload.role}\`);
+  }
+  return payload;
+}
+
+function rank(r: Role) {
+  return { viewer: 0, editor: 1, admin: 2 }[r];
+}`,
+      },
+    ],
+    related: ["hisably", "rustam-battery"],
+  },
+
+  {
+    id: "solar-quotation",
+    slug: "solar-quotation",
+    name: "SOLAR QUOTATION",
+    codename: "Live Project · 04",
+    tagline: "On-site solar quotes in 60 seconds. Offline. PIN-locked.",
+    category: "Internal Tool · Field Sales",
+    year: "2026",
+    status: "PRODUCTION",
+    accent: "#10b981",
+    duration: "5 weeks",
+    team: "Solo full-stack",
+    role: "Product engineer",
+    myWork: [
+      "Full PWA shell with installable manifest + service worker",
+      "PIN auth flow with Web Crypto hashing (no plaintext)",
+      "Offline-first quote storage (IndexedDB)",
+      "Client-side branded PDF generation (jsPDF) — header, customer block, system specs, pricing",
+      "Mobile-first responsive UI tested on cheap Android phones",
+    ],
+    liveUrl: "https://rustam-solar-quotation.vercel.app",
+    image: "/projects/rustam-quotation.jpg",
+    stack: [
+      "React 18",
+      "Vite",
+      "TypeScript",
+      "Tailwind CSS",
+      "vite-plugin-pwa",
+      "jsPDF",
+      "IndexedDB",
+      "PWA",
+      "Vercel",
+    ],
+    metrics: [
+      { label: "Quote turnaround", value: "60s", trend: "Product capability" },
+      { label: "Offline support", value: "100%", trend: "Product capability" },
+      { label: "PIN security", value: "4-digit", trend: "Product capability" },
+      { label: "PDF auto-branded", value: "✓", trend: "Product capability" },
+    ],
+    engineeringMetrics: [
+      // TODO: measure actual end-to-end time from app open → PDF in hand on a mid-range phone.
+      { label: "Open → PDF on mid-range Android", value: "TODO seconds" },
+      { label: "Works fully offline", value: "Yes" },
+      { label: "Backend cost / month", value: "$0 (no backend)" },
+    ],
+    description:
+      "PWA quotation generator for solar sales reps who visit customers' homes. Generates fully branded PDF quotes in under a minute, works completely offline, and stays PIN-locked so reps can't see each other's pipelines.",
+    challenge:
+      "Field sales reps were sketching quotes on paper during home visits, then emailing properly formatted versions days later — by which point the customer had already taken a competitor's same-day quote. Manual math errors were frequent. Each rep also wanted their own pipeline kept private.",
+    constraints: [
+      "No reliable internet during home visits — must work fully offline",
+      "Phones are cheap Android devices, often older Chrome versions",
+      "Each rep wants their own pipeline private from colleagues",
+      "Zero ongoing cloud cost — small business can't justify a backend bill",
+    ],
+    tradeoffs: [
+      {
+        decision: "Client-side everything (no backend, no central DB)",
+        gave_up:
+          "Centralized analytics and cross-device sync. Won zero hosting cost, true offline, and instant privacy between reps — the right trade for this product.",
+      },
+      {
+        decision: "4-digit PIN instead of full auth",
+        gave_up:
+          "Strong account-level security. The PIN is enough to keep colleagues out of each other's pipelines on a shared-feeling app, which was the actual threat model.",
+      },
+    ],
+    solution:
+      "Built an offline-first PWA. Reps install it on their phones, set a 4-digit PIN on first launch, and can generate quotes during the actual site visit. PDF generation happens client-side via jsPDF so no internet is needed; quotes sync to the cloud when the phone comes back online.",
+    outcome:
+      "Reps now hand the customer a printed quote before leaving the home. Conversion timeline collapsed from ~10 days to same-day in most cases.",
+    features: [
+      "4-digit PIN auth per device",
+      "Fully offline-first via PWA + IndexedDB",
+      "Customer details capture (name, address, phone)",
+      "Solar system sizing (kW, panel count, battery kWh)",
+      "Auto pricing from a versioned price book",
+      "Client-side branded PDF generation",
+      "Quote history (last 50 quotes, searchable)",
+      "Install-to-home-screen on Android + iOS",
+    ],
+    architecture: [
+      "Vite + React 18 single-page app",
+      "vite-plugin-pwa for service worker + manifest",
+      "IndexedDB for persistent quote storage",
+      "jsPDF for client-side PDF rendering with embedded logo",
+      "Price book versioned as TypeScript constants (no backend)",
+      "PIN hashed with Web Crypto API (no plaintext)",
+      "Vercel static hosting (zero ongoing cost)",
+    ],
+    process: [
+      {
+        week: "Week 1",
+        label: "Field shadowing",
+        desc: "Spent a day riding along with sales reps to understand the actual home-visit workflow and what slowed quotes down.",
+      },
+      {
+        week: "Week 2",
+        label: "PIN + offline shell",
+        desc: "Built the PIN auth flow, IndexedDB persistence layer, and PWA service worker — the unsexy plumbing that the whole app rests on.",
+      },
+      {
+        week: "Week 3–4",
+        label: "Calculator + PDF",
+        desc: "Shipped the sizing calculator with branded PDF output. Lots of small typography work to get the printed quote to look professional.",
+      },
+      {
+        week: "Week 5",
+        label: "Polish + rollout",
+        desc: "On-device testing across cheap Android phones, install instructions, and a one-pager guide for the sales team.",
+      },
+    ],
+    snippets: [
+      {
+        language: "typescript",
+        filename: "src/pdf/buildQuote.ts",
+        caption:
+          "Generates the branded PDF entirely in the browser — no server round-trip, works offline.",
+        code: `import jsPDF from "jspdf";
+import { logoDataURI } from "@/assets/logo";
+
+interface QuoteData {
+  customer: { name: string; address: string; phone: string };
+  system: { kw: number; panels: number; batteryKwh: number };
+  pricing: { total: number; deposit: number; installments: number };
+  quoteNo: string;
+  date: string;
+}
+
+export function buildQuotePdf(q: QuoteData): Blob {
+  const pdf = new jsPDF({ unit: "pt", format: "a4" });
+
+  // Header with logo
+  pdf.addImage(logoDataURI, "PNG", 40, 30, 80, 80);
+  pdf.setFontSize(22).text("Solar Quotation", 140, 60);
+  pdf.setFontSize(10).text(\`Quote #\${q.quoteNo} · \${q.date}\`, 140, 80);
+
+  // Customer block
+  pdf.setFontSize(11);
+  pdf.text(\`Customer: \${q.customer.name}\`, 40, 140);
+  pdf.text(\`Address:  \${q.customer.address}\`, 40, 156);
+  pdf.text(\`Phone:    \${q.customer.phone}\`, 40, 172);
+
+  // System block
+  pdf.setFontSize(13).text("System Specification", 40, 220);
+  pdf.setFontSize(11);
+  pdf.text(\`Capacity:        \${q.system.kw} kW\`, 40, 244);
+  pdf.text(\`Panels:          \${q.system.panels}\`, 40, 260);
+  pdf.text(\`Battery storage: \${q.system.batteryKwh} kWh\`, 40, 276);
+
+  // Pricing
+  pdf.setFontSize(13).text("Investment", 40, 324);
+  pdf.setFontSize(11);
+  pdf.text(\`Total:        PKR \${q.pricing.total.toLocaleString()}\`, 40, 348);
+  pdf.text(\`Deposit:      PKR \${q.pricing.deposit.toLocaleString()}\`, 40, 364);
+  pdf.text(\`Installments: \${q.pricing.installments} months\`, 40, 380);
+
+  return pdf.output("blob");
+}`,
+      },
+      {
+        language: "typescript",
+        filename: "src/auth/pin.ts",
+        caption:
+          "PIN is hashed with the Web Crypto API and stored locally — no plaintext PIN ever touches disk or network.",
+        code: `const SALT = "solar-quote-pwa-v1";
+
+async function hash(pin: string): Promise<string> {
+  const enc = new TextEncoder().encode(SALT + pin);
+  const buf = await crypto.subtle.digest("SHA-256", enc);
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+export async function setPin(pin: string) {
+  if (!/^\\d{4}$/.test(pin)) throw new Error("PIN must be 4 digits");
+  localStorage.setItem("pin_hash", await hash(pin));
+}
+
+export async function verifyPin(pin: string): Promise<boolean> {
+  const stored = localStorage.getItem("pin_hash");
+  if (!stored) return false;
+  return (await hash(pin)) === stored;
+}`,
+      },
+    ],
+    related: ["rustam-battery", "window-land"],
   },
 ];
 
-export const getProject = (slug: string) =>
-  projects.find((p) => p.slug === slug);
+export function getProject(slug: string): Project | undefined {
+  return projects.find((p) => p.slug === slug);
+}

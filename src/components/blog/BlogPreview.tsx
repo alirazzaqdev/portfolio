@@ -5,6 +5,7 @@ import Link from "next/link";
 import { posts } from "@/lib/data/blog";
 
 export default function BlogPreview() {
+  if (posts.length === 0) return null;
   const recent = [...posts]
     .sort((a, b) => (a.date < b.date ? 1 : -1))
     .slice(0, 3);

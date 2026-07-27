@@ -22,12 +22,20 @@ const PROJECT_TYPES = [
   "Other",
 ];
 
+/**
+ * TODO: Confirm target audience before finalising these ranges.
+ * - International / UAE premium clients → keep USD bands like the current ones.
+ * - Local Pakistani SMEs → switch to PKR bands (e.g. "Under PKR 100k", "PKR 100k–500k", ...)
+ *   because USD bands here will price-shock and lose real leads.
+ * The blank first option is intentional — no anchor before the conversation starts.
+ */
 const BUDGETS = [
+  "Select a range…",
+  "Let's discuss",
   "Under $2k",
   "$2k – $5k",
   "$5k – $15k",
   "$15k+",
-  "Let's discuss",
 ];
 
 export default function Contact() {
@@ -38,12 +46,24 @@ export default function Contact() {
     email: "",
     company: "",
     type: PROJECT_TYPES[0],
-    budget: BUDGETS[2],
+    budget: BUDGETS[0],
     message: "",
   });
+  /**
+   * Honeypot — invisible to humans, attractive to naive bots.
+   * If this field has any value at submit time we drop the message silently.
+   */
+  const [honeypot, setHoneypot] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Honeypot tripped → pretend success without sending anything.
+    if (honeypot.trim() !== "") {
+      setStatus("success");
+      return;
+    }
+
     setStatus("sending");
     setErrorMsg("");
 
@@ -63,7 +83,7 @@ export default function Contact() {
         email: "",
         company: "",
         type: PROJECT_TYPES[0],
-        budget: BUDGETS[2],
+        budget: BUDGETS[0],
         message: "",
       });
     } catch (err) {
@@ -156,7 +176,7 @@ export default function Contact() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6, delay: 0.1 }}
             onSubmit={handleSubmit}
-            className="card p-7 lg:col-span-8 lg:p-8"
+            className="card relative p-7 lg:col-span-8 lg:p-8"
           >
             <div className="grid gap-5 sm:grid-cols-2">
               <Field
@@ -192,6 +212,19 @@ export default function Contact() {
                 onChange={(v) => setForm({ ...form, budget: v })}
                 options={BUDGETS}
                 className="sm:col-span-2"
+              />
+            </div>
+
+            {/* Honeypot — hidden from real users, bots fill it and get dropped. */}
+            <div aria-hidden="true" className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden">
+              <label htmlFor="website-hp">Website</label>
+              <input
+                id="website-hp"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
               />
             </div>
 

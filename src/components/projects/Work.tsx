@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { projects, type Project } from "@/lib/data/projects";
 
@@ -25,12 +26,13 @@ export default function Work() {
               from the past two years.
             </h2>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed text-[var(--color-fg-soft)]">
-              Three projects I led end-to-end. Each one is its own page with
-              the full story — the problem, the architecture, what shipped.
+              Real client work I shipped end-to-end. Each project is its own
+              page with the full story — the problem, the architecture, what
+              shipped.
             </p>
           </div>
           <div className="text-sm text-[var(--color-fg-muted)]">
-            {projects.length} projects · 2024 – 2025
+            {projects.length} live projects
           </div>
         </motion.div>
 
@@ -56,6 +58,23 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         href={`/work/${project.slug}`}
         className="group block overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-bg-elevated)] transition hover:border-[var(--color-line-bright)]"
       >
+        {/* Screenshot banner */}
+        <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-[var(--color-line)] bg-[var(--color-bg)] sm:aspect-[21/9]">
+          <Image
+            src={project.image}
+            alt={`${project.name} — live site screenshot`}
+            fill
+            sizes="(max-width: 1024px) 100vw, 1100px"
+            className="object-cover object-top transition duration-500 group-hover:scale-[1.02]"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[var(--color-bg-elevated)]/40 via-transparent to-transparent" />
+          {project.liveUrl && (
+            <div className="absolute bottom-4 right-4 rounded-full bg-[var(--color-bg)]/80 px-3 py-1 text-[11px] font-medium text-[var(--color-fg)] backdrop-blur">
+              Live site ↗
+            </div>
+          )}
+        </div>
+
         <div className="grid gap-8 p-8 lg:grid-cols-12 lg:gap-10 lg:p-10">
           {/* Left: Info */}
           <div className="lg:col-span-7">

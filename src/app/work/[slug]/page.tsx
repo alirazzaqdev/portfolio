@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { projects, getProject } from "@/lib/data/projects";
+import { siteConfig } from "@/lib/config";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -14,8 +16,31 @@ export async function generateMetadata(props: {
   const project = getProject(slug);
   if (!project) return { title: "Not Found" };
   return {
-    title: `${project.name} — Ali Razzaq`,
-    description: project.description,
+    title: `${project.name} — Case Study`,
+    description: `${project.description} A case study by Ali Razzaq, full-stack software developer.`,
+    alternates: {
+      canonical: `${siteConfig.url}/work/${project.slug}`,
+    },
+    openGraph: {
+      title: `${project.name} — Case Study by Ali Razzaq`,
+      description: project.description,
+      type: "article",
+      url: `${siteConfig.url}/work/${project.slug}`,
+      images: [
+        {
+          url: `${siteConfig.url}${project.image}`,
+          width: 1440,
+          height: 900,
+          alt: `${project.name} live site screenshot`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${project.name} — Case Study`,
+      description: project.description,
+      images: [`${siteConfig.url}${project.image}`],
+    },
   };
 }
 
@@ -71,6 +96,33 @@ export default async function CaseStudyPage(props: {
           {project.description}
         </p>
 
+        {project.liveUrl && (
+          <div className="mt-8 flex flex-wrap gap-3">
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-[var(--color-bg)] transition hover:opacity-90"
+              style={{ backgroundColor: project.accent }}
+            >
+              Visit live site
+              <span>↗</span>
+            </a>
+          </div>
+        )}
+
+        {/* Screenshot */}
+        <div className="relative mt-12 aspect-[16/9] w-full overflow-hidden rounded-2xl border border-[var(--color-line-bright)] bg-[var(--color-bg-elevated)] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)]">
+          <Image
+            src={project.image}
+            alt={`${project.name} — live site screenshot`}
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 1100px"
+            className="object-cover object-top"
+          />
+        </div>
+
         {/* Quick facts */}
         <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-[var(--color-line)] bg-[var(--color-line)] sm:grid-cols-3">
           <Fact label="Duration" value={project.duration} />
@@ -79,9 +131,13 @@ export default async function CaseStudyPage(props: {
         </div>
       </section>
 
-      {/* Metrics */}
+      {/* Client business stats */}
       <section className="container-x mt-20">
-        <div className="eyebrow">Outcome</div>
+        <div className="eyebrow">Client context</div>
+        <p className="mt-3 max-w-2xl text-sm text-[var(--color-fg-muted)]">
+          Numbers about the client&apos;s business — useful context, not my
+          engineering output.
+        </p>
         <div className="mt-6 grid grid-cols-2 gap-8 md:grid-cols-4">
           {project.metrics.map((m) => (
             <div key={m.label}>
@@ -94,15 +150,65 @@ export default async function CaseStudyPage(props: {
               >
                 {m.value}
               </div>
-              {m.trend && (
-                <div className="mt-1 text-sm text-[var(--color-fg-soft)]">
-                  {m.trend}
-                </div>
-              )}
             </div>
           ))}
         </div>
       </section>
+
+      {/* My engineering output */}
+      {project.engineeringMetrics && project.engineeringMetrics.length > 0 && (
+        <section className="container-x mt-16">
+          <div className="eyebrow">My engineering output</div>
+          <p className="mt-3 max-w-2xl text-sm text-[var(--color-fg-muted)]">
+            Numbers I produced — measurable, attributable to the work I did.
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {project.engineeringMetrics.map((m) => (
+              <div
+                key={m.label}
+                className="rounded-xl border border-[var(--color-line)] bg-[var(--color-bg-elevated)] p-5"
+              >
+                <div className="text-xs text-[var(--color-fg-muted)]">
+                  {m.label}
+                </div>
+                <div className="mt-2 text-2xl tabular-nums text-[var(--color-fg)]">
+                  {m.value}
+                </div>
+                {m.note && (
+                  <div className="mt-1 text-xs text-[var(--color-fg-muted)]">
+                    {m.note}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* What I built (separate from what the client supplied) */}
+      {project.myWork && project.myWork.length > 0 && (
+        <section className="container-x mt-16">
+          <div className="eyebrow">What I built</div>
+          <p className="mt-3 max-w-2xl text-sm text-[var(--color-fg-muted)]">
+            My specific scope on this project — separate from anything the
+            client team supplied.
+          </p>
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+            {project.myWork.map((w) => (
+              <li
+                key={w}
+                className="flex items-start gap-3 rounded-xl border border-[var(--color-line)] bg-[var(--color-bg-elevated)] p-5 text-base leading-relaxed text-[var(--color-fg-soft)]"
+              >
+                <span
+                  className="mt-2 inline-block h-1 w-1 shrink-0 rounded-full"
+                  style={{ backgroundColor: project.accent }}
+                />
+                <span>{w}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Story */}
       <section className="container-x section">
@@ -125,6 +231,74 @@ export default async function CaseStudyPage(props: {
           <Block label="Outcome" body={project.outcome} />
         </div>
       </section>
+
+      {/* Constraints */}
+      {project.constraints && project.constraints.length > 0 && (
+        <section className="container-x mt-16">
+          <div className="eyebrow">Real constraints</div>
+          <h2 className="mt-4 max-w-3xl text-3xl leading-[1.1] sm:text-4xl">
+            The boundaries that shaped the build.
+          </h2>
+          <ul className="mt-10 space-y-3">
+            {project.constraints.map((c, i) => (
+              <li
+                key={c}
+                className="flex items-start gap-4 rounded-xl border border-[var(--color-line)] bg-[var(--color-bg-elevated)] p-6 text-base leading-relaxed text-[var(--color-fg-soft)]"
+              >
+                <span
+                  className="mt-1 font-mono text-xs text-[var(--color-fg-muted)]"
+                  style={{ color: project.accent }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span>{c}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Tradeoffs */}
+      {project.tradeoffs && project.tradeoffs.length > 0 && (
+        <section className="container-x mt-16">
+          <div className="eyebrow">Honest tradeoffs</div>
+          <h2 className="mt-4 max-w-3xl text-3xl leading-[1.1] sm:text-4xl">
+            What I chose,{" "}
+            <span className="serif-italic text-[var(--color-fg-soft)]">
+              and what I gave up
+            </span>
+            .
+          </h2>
+          <div className="mt-10 space-y-4">
+            {project.tradeoffs.map((t, i) => (
+              <div
+                key={i}
+                className="grid gap-6 rounded-xl border border-[var(--color-line)] bg-[var(--color-bg-elevated)] p-6 sm:p-7 lg:grid-cols-2"
+              >
+                <div>
+                  <div
+                    className="text-xs uppercase tracking-wider"
+                    style={{ color: project.accent }}
+                  >
+                    Decision
+                  </div>
+                  <p className="mt-2 text-base leading-relaxed text-[var(--color-fg)]">
+                    {t.decision}
+                  </p>
+                </div>
+                <div>
+                  <div className="text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
+                    What we gave up
+                  </div>
+                  <p className="mt-2 text-base leading-relaxed text-[var(--color-fg-soft)]">
+                    {t.gave_up}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Process */}
       <section className="container-x">
@@ -260,36 +434,38 @@ export default async function CaseStudyPage(props: {
       </section>
 
       {/* Testimonial */}
-      <section className="container-x section">
-        <div className="card p-10 sm:p-14">
-          <div className="eyebrow">What the client said</div>
-          <blockquote className="mt-6 max-w-4xl text-2xl leading-snug text-[var(--color-fg)] sm:text-3xl md:text-4xl">
-            <span className="serif-italic">{project.testimonial.quote}</span>
-          </blockquote>
-          <div className="mt-8 flex items-center gap-4">
-            <div
-              className="flex h-12 w-12 items-center justify-center rounded-full text-sm text-white"
-              style={{
-                background: `linear-gradient(135deg, ${project.accent}, ${project.accent}80)`,
-              }}
-            >
-              {project.testimonial.author
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .slice(0, 2)}
-            </div>
-            <div>
-              <div className="text-base text-[var(--color-fg)]">
-                {project.testimonial.author}
+      {project.testimonial && (
+        <section className="container-x section">
+          <div className="card p-10 sm:p-14">
+            <div className="eyebrow">What the client said</div>
+            <blockquote className="mt-6 max-w-4xl text-2xl leading-snug text-[var(--color-fg)] sm:text-3xl md:text-4xl">
+              <span className="serif-italic">{project.testimonial.quote}</span>
+            </blockquote>
+            <div className="mt-8 flex items-center gap-4">
+              <div
+                className="flex h-12 w-12 items-center justify-center rounded-full text-sm text-white"
+                style={{
+                  background: `linear-gradient(135deg, ${project.accent}, ${project.accent}80)`,
+                }}
+              >
+                {project.testimonial.author
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .slice(0, 2)}
               </div>
-              <div className="text-sm text-[var(--color-fg-muted)]">
-                {project.testimonial.role} · {project.testimonial.company}
+              <div>
+                <div className="text-base text-[var(--color-fg)]">
+                  {project.testimonial.author}
+                </div>
+                <div className="text-sm text-[var(--color-fg-muted)]">
+                  {project.testimonial.role} · {project.testimonial.company}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Related */}
       {relatedProjects.length > 0 && (

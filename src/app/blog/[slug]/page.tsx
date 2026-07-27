@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { posts, getPost, type BlogSection } from "@/lib/data/blog";
+import { siteConfig } from "@/lib/config";
 
 export async function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
@@ -16,13 +17,23 @@ export async function generateMetadata(props: {
   return {
     title: post.title,
     description: post.description,
+    keywords: post.tags,
+    alternates: {
+      canonical: `${siteConfig.url}/blog/${post.slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.description,
       type: "article",
+      url: `${siteConfig.url}/blog/${post.slug}`,
       publishedTime: post.date,
       authors: ["Ali Razzaq"],
       tags: post.tags,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
     },
   };
 }
@@ -38,8 +49,40 @@ export default async function BlogPostPage(props: {
   const idx = sorted.findIndex((p) => p.slug === post.slug);
   const next = sorted[(idx + 1) % sorted.length];
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    dateModified: post.date,
+    keywords: post.tags.join(", "),
+    articleSection: post.category,
+    inLanguage: "en",
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteConfig.url}/blog/${post.slug}`,
+    },
+    author: {
+      "@type": "Person",
+      name: "Ali Razzaq",
+      url: siteConfig.url,
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Ali Razzaq",
+      url: siteConfig.url,
+    },
+  };
+
   return (
     <main className="pt-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <article>
         {/* Back link */}
         <div className="container-x">
