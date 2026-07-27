@@ -482,6 +482,109 @@ SETTINGS storage_policy = 'tiered';`,
     },
     related: ["vaultpay", "helix-ai"],
   },
+  {
+    id: "rouzeal",
+    slug: "rouzeal",
+    name: "ROUZEAL",
+    codename: "Archive · 04",
+    tagline: "Illuminating your skin — luxury beauty, delivered.",
+    category: "E-commerce · Beauty & Cosmetics",
+    year: "2026",
+    status: "PRODUCTION",
+    accent: "#ff5c8a",
+    duration: "8 weeks",
+    team: "2 engineers",
+    role: "Lead full-stack developer",
+    stack: [
+      "Next.js 15",
+      "React",
+      "TypeScript",
+      "Tailwind CSS v4",
+      "Vercel",
+      "Node.js",
+    ],
+    metrics: [
+      { label: "Status", value: "Live in production" },
+      { label: "Market", value: "Pakistan" },
+      { label: "Product lines", value: "7+ categories" },
+      { label: "Checkout", value: "COD + SSL-secured" },
+    ],
+    description:
+      "A premium beauty and cosmetics storefront for the Pakistani market — skincare, haircare, fragrances, makeup, and grooming from established international and regional brands like L'Oreal, Maybelline, Revlon, and Dove, delivered door-to-door.",
+    challenge:
+      "Online beauty retail in Pakistan lives or dies on trust and speed. Buyers are mobile-first, price-sensitive, and used to Cash on Delivery — a slow catalog or an unfamiliar checkout flow sends them straight back to a physical store.",
+    solution:
+      "Built the storefront on Next.js App Router with server-rendered, image-optimized category and product pages for fast first paint on mid-range mobile devices. Tailwind CSS v4 powers a consistent design system across the catalog. Checkout supports both Cash on Delivery and SSL-secured card payments to match local buying habits.",
+    outcome:
+      "A live storefront organized across seven product lines (skincare, hair care, fragrances, makeup, personal care, kids, and men's grooming), with free shipping above Rs. 5,000 and a 7-day return policy that lowers the barrier for first-time online beauty buyers.",
+    features: [
+      "Multi-category catalog: skincare, hair care, fragrances, makeup, personal care, kids, and men's",
+      "Curated brand portfolio spanning international and regional labels",
+      "PKR pricing with free shipping above Rs. 5,000",
+      "Cash on Delivery + 256-bit SSL-secured checkout",
+      "7-day return policy surfaced throughout the buying flow",
+      "Mobile-first responsive storefront",
+      "Optimized responsive imagery via next/image",
+    ],
+    architecture: [
+      "Next.js 15 App Router with server-rendered category and product pages",
+      "Tailwind CSS v4 design system shared across the storefront",
+      "next/image with responsive srcsets for hero and product imagery",
+      "Deployed on Vercel's edge network",
+    ],
+    process: [
+      {
+        week: "Week 1-2",
+        label: "Catalog structure + design system",
+        desc: "Mapped the category tree (skincare, hair care, fragrances, makeup, personal care, kids, men's) and built the Tailwind v4 design system for the storefront.",
+      },
+      {
+        week: "Week 3-5",
+        label: "Storefront + product pages",
+        desc: "Built the App Router catalog, product detail pages, and cart flow with server rendering for fast mobile load times.",
+      },
+      {
+        week: "Week 6-7",
+        label: "Checkout + trust signals",
+        desc: "Wired up Cash on Delivery alongside SSL-secured card checkout, plus free-shipping threshold and return-policy messaging throughout the funnel.",
+      },
+      {
+        week: "Week 8",
+        label: "Launch",
+        desc: "Shipped the production storefront on Vercel and handed off content management to the Rouzeal team.",
+      },
+    ],
+    snippets: [
+      {
+        language: "typescript",
+        filename: "app/(shop)/category/[slug]/page.tsx",
+        caption: "Category page: server-rendered product grid with free-shipping threshold logic.",
+        code: `export default async function CategoryPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const products = await getProductsByCategory(slug);
+
+  return (
+    <section>
+      <FreeShippingBanner thresholdPKR={5000} />
+      <ProductGrid products={products} />
+    </section>
+  );
+}`,
+      },
+    ],
+    testimonial: {
+      author: "Ali Razzaq",
+      role: "Lead Developer",
+      company: "Rouzeal",
+      quote:
+        "The brief was simple: make a beauty catalog feel fast on a mid-range Android over 4G, and make checkout feel familiar to someone paying Cash on Delivery for the first time online. Next.js's server rendering and a tight Tailwind design system got us there.",
+    },
+    related: ["vaultpay", "helix-ai"],
+  },
 ];
 
 export const getProject = (slug: string) =>
