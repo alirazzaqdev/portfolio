@@ -71,6 +71,14 @@ export default function HeroSection() {
             >
               Get in touch
             </Link>
+            <a
+              href="/Ali-Razzaq-Resume.pdf"
+              download
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--color-line-bright)] px-6 py-3 text-sm font-medium text-[var(--color-fg-soft)] transition hover:border-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
+            >
+              Download résumé
+              <span aria-hidden>↓</span>
+            </a>
           </motion.div>
 
           {/* Quick facts */}
