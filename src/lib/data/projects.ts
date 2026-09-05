@@ -65,10 +65,218 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "aqua-flex",
+    slug: "aqua-flex",
+    name: "AQUA FLEX",
+    codename: "Live Project · 01",
+    tagline: "Water treatment engineering, built without inventing a single claim.",
+    category: "Corporate · Water Treatment Engineering",
+    year: "2026",
+    status: "PRODUCTION",
+    accent: "#087DBB",
+    duration: "1 week",
+    team: "Solo full-stack + client-supplied content",
+    role: "Lead engineer / designer",
+    myWork: [
+      "Nine-route Next.js 16 site — design system, every page, header, footer",
+      "Tailwind v4 @theme token system with a contrast gate script that fails if any of 22 colour pairs drops below WCAG AA",
+      "Interactive treatment-process explorers — 9 stages on How It Works, a 5-stage preview on the homepage — built as WAI-ARIA tab patterns",
+      "Eight-step plant selector with a conservative rule-based recommendation engine that explains its own reasoning",
+      "Contact form and selector both compose a structured WhatsApp enquiry — no backend was available, so none was faked",
+      "Centralised pricing module: a price renders only once the business has verified it, otherwise the call to action renders instead",
+      "Business-claims audit that found and removed nine unverifiable public claims",
+      "Vectorised the supplied logo into a mark / wordmark / reversed system, all cut from one master by viewBox",
+      "Namecheap to Vercel domain migration with canonical, sitemap, robots and schema moved on one constant",
+    ],
+    liveUrl: "https://aquaflexpk.com",
+    image: "/projects/aqua-flex.jpg",
+    stack: [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS v4",
+      "Server Components",
+      "Turbopack",
+      "next/font",
+      "JSON-LD",
+      "WhatsApp deeplinks",
+      "Vercel",
+    ],
+    metrics: [
+      { label: "Established", value: "1995", trend: "Client business stat" },
+      { label: "Years in business", value: "30+", trend: "Client business stat" },
+      { label: "Client references", value: "7", trend: "Client business stat" },
+      { label: "Team size", value: "10", trend: "Client business stat" },
+    ],
+    engineeringMetrics: [
+      {
+        label: "Lighthouse performance",
+        value: "96–99",
+        note: "Measured on production across four pages",
+      },
+      {
+        label: "Accessibility / Best Practices / SEO",
+        value: "100",
+        note: "All three, all four pages, zero failures",
+      },
+      { label: "Cumulative layout shift", value: "0.000" },
+      { label: "JS shipped", value: "216 KB gzipped" },
+      {
+        label: "Responsive checks passed",
+        value: "70/70",
+        note: "10 routes across 7 widths, 320px to 1440px",
+      },
+      { label: "Hosting cost / month", value: "$0 (Vercel free)" },
+    ],
+    description:
+      "Corporate site for a Lahore water-treatment company running since 1995. Nine routes covering commercial and domestic RO systems, how treatment actually works, services, references, the team, contact, and an interactive plant selector — built around the constraint that almost nothing about the business had been documented.",
+    challenge:
+      "The client supplied a phone number, an address, seven client names with their sectors, ten staff names, two portraits and two hand-drawn process diagrams. That is it. No capacities, no project photography, no prices at the start, no certifications. Every gap on a site like this is an invitation to write plausible copy — a fake case study, a stock photo under a real client's name, an invented response time. Doing that would have handed the business claims it could not honour.",
+    constraints: [
+      "Seven client references with name and sector only — no capacity, year, value or photograph",
+      "Two of ten staff portraits supplied; no generated faces permitted for the rest",
+      "No backend, no mail service, no API key — the contact path had to work anyway",
+      "Prices arrived late in the build and had to be publishable the moment they did",
+      "Pakistani market: mostly mobile, WhatsApp-first, cost-sensitive hosting",
+    ],
+    tradeoffs: [
+      {
+        decision: "Typography-led client references instead of illustrated case-study cards",
+        gave_up:
+          "Visual richness on the strongest credibility page. A stock plant photo under a real client's name implies that equipment is theirs, which is not mine to imply — so the references are set in type until real site photography is cleared.",
+      },
+      {
+        decision: "Structured WhatsApp messages instead of a form backend",
+        gave_up:
+          "A lead database and submission analytics. There was no mail service to post to, and a form that silently goes nowhere is worse than none — this way the visitor reads the exact message before it sends, on the channel the market already uses.",
+      },
+      {
+        decision: "A stated experience label rather than one computed from the founding year",
+        gave_up:
+          "Self-updating copy. A site that quietly becomes '32 years' next January is a site nobody is checking; the figure is stated once and reviewed deliberately.",
+      },
+    ],
+    solution:
+      "Built every surface so that missing information degrades honestly instead of being filled in. Prices live in one module and render their call to action until the business verifies a figure. Service intervals stay unpublished because they depend on the water. The plant selector recommends a starting category and says three times over that design comes from an analysis. Social icons render as decoration — not dead links — until a real URL exists. A written claims audit records the evidence behind every public statement, and the nine that were removed for having none.",
+    outcome:
+      "Live on its own domain with nine routes, 100 on accessibility, best practices and SEO across every page measured, zero dead links, and zero horizontal overflow from 320px up. Every published claim traces to a supplied file or written confirmation, and the handoff document tells the client exactly what is still needed to fill the remaining gaps.",
+    features: [
+      "Interactive 9-stage treatment process explorer, keyboard-operable",
+      "Eight-step plant selector with an explainable recommendation",
+      "Domestic system pricing with cartridge and component price list",
+      "Requirement form that composes a structured WhatsApp enquiry",
+      "Client reference grid with sector filtering",
+      "Team presented as departments, with initials where no portrait exists",
+      "LocalBusiness schema with confirmed opening hours",
+      "Branded 404, sitemap and robots",
+    ],
+    architecture: [
+      "Next.js 16 App Router, Server Components by default",
+      "Client JS only where something is genuinely interactive — header, two process explorers, reference filter, contact form, selector",
+      "Tailwind v4 @theme design tokens, no component library",
+      "Single-source data modules: company, clients, team, pricing, products",
+      "Contrast gate reads the palette from globals.css so it cannot drift",
+      "next/image with priority on the LCP hero, lazy below the fold",
+      "Static generation for all nine routes",
+      "Vercel edge hosting, custom domain via Namecheap A + CNAME records",
+    ],
+    process: [
+      {
+        week: "Phase 1",
+        label: "Design system + homepage",
+        desc: "Built the token system, the contrast gate, header, footer and homepage before any other page existed, so every later route inherited one visual language.",
+      },
+      {
+        week: "Phase 2–3",
+        label: "Product and process pages",
+        desc: "Commercial, domestic, how-it-works and services. The treatment explorers were built as accessible tab patterns rather than bespoke widgets.",
+      },
+      {
+        week: "Phase 4–5",
+        label: "Proof, people and conversion",
+        desc: "References, the team presentation, contact, and the plant selector with its rule engine. Every claim on these pages had to trace to something the client supplied.",
+      },
+      {
+        week: "Phase 6",
+        label: "Claims audit + production hardening",
+        desc: "Audited every public statement against the evidence, removed nine unverifiable claims, added SEO, structured data, sitemap and robots, and fixed the accessibility defects Lighthouse surfaced.",
+      },
+      {
+        week: "Phase 7",
+        label: "Brand + domain",
+        desc: "Vectorised the official logo into a derived variant system, then migrated the canonical origin from the Vercel alias to aquaflexpk.com — DNS, certificates, redirects and every absolute URL.",
+      },
+    ],
+    snippets: [
+      {
+        language: "typescript",
+        filename: "src/data/pricing.ts",
+        caption:
+          "The rule that stops a price ever being guessed. Anything unverified renders its call to action instead of a number — never Rs. 0, never TBD, never an estimate.",
+        code: `export function formatPrice(
+  key: string,
+  fallbackLabel = "Request Current Price",
+): string {
+  const p = pricing[key];
+
+  if (!p || !p.verified || p.type === "quote" || p.amount === undefined) {
+    return fallbackLabel;
+  }
+
+  if (p.type === "range" && p.maxAmount !== undefined) {
+    return formatRupees(p.amount) + " – " + formatRupees(p.maxAmount);
+  }
+
+  if (p.type === "starting-from") {
+    return "From " + formatRupees(p.amount);
+  }
+
+  return formatRupees(p.amount);
+}`,
+      },
+      {
+        language: "typescript",
+        filename: "src/data/plant-selector.ts",
+        caption:
+          "The selector's recommendation engine. Deliberately simple, because the result screen explains its own reasoning back to the visitor — and TDS never decides the category on its own.",
+        code: `export function recommend(a: SelectorAnswers): Recommendation {
+  const reasons: string[] = [];
+  const caveats: string[] = [];
+  const litres = a.demand ? toLitresPerDay(Number(a.demand), a.demandUnit) : null;
+
+  // An installed plant changes the question entirely.
+  if (a.hasExisting === "yes") {
+    reasons.push("There is already a treatment system installed");
+    caveats.push(
+      "Whether it is serviced, modified or replaced depends on what is " +
+        "installed and how far it is from what is now needed.",
+    );
+    return { category: categories["service-upgrade"], reasons, caveats };
+  }
+
+  const processUse = a.purpose === "process" || a.purpose === "boiler";
+  const isIndustrial =
+    a.application === "industrial" ||
+    processUse ||
+    (litres !== null && litres >= INDUSTRIAL_FROM);
+
+  // Nothing to go on: say so rather than guessing a category.
+  if (!isIndustrial && a.application !== "home" && a.source === "unknown") {
+    caveats.push("A test of the supply is the sensible first step.");
+    return { category: categories["analysis-first"], reasons, caveats };
+  }
+
+  // ...source and TDS qualify the answer; they never decide it alone.
+}`,
+      },
+    ],
+    related: ["rustam-battery", "window-land"],
+  },
+  {
     id: "hisably",
     slug: "hisably",
     name: "HISABLY",
-    codename: "Live Project · 01",
+    codename: "Live Project · 02",
     tagline: "Offline-first billing & invoicing SaaS for SMBs.",
     category: "SaaS · Billing & Invoicing",
     year: "2026",
@@ -261,7 +469,7 @@ def finalize_total(subtotal: Decimal, tax: Decimal) -> dict:
     id: "rustam-battery",
     slug: "rustam-battery",
     name: "RUSTAM BATTERY",
-    codename: "Live Project · 02",
+    codename: "Live Project · 03",
     tagline: "Solar energy commerce for Pakistan's hottest summers.",
     category: "E-commerce · Solar Energy",
     year: "2026",
@@ -446,7 +654,7 @@ export function whatsappLink(ctx: LeadContext = {}) {
     id: "window-land",
     slug: "window-land",
     name: "WINDOW LAND",
-    codename: "Live Project · 03",
+    codename: "Live Project · 04",
     tagline: "Premium glass & aluminium for Dubai's skyline.",
     category: "Corporate · UAE",
     year: "2026",
@@ -654,7 +862,7 @@ function rank(r: Role) {
     id: "solar-quotation",
     slug: "solar-quotation",
     name: "SOLAR QUOTATION",
-    codename: "Live Project · 04",
+    codename: "Live Project · 05",
     tagline: "On-site solar quotes in 60 seconds. Offline. PIN-locked.",
     category: "Internal Tool · Field Sales",
     year: "2026",
@@ -844,7 +1052,7 @@ export async function verifyPin(pin: string): Promise<boolean> {
     id: "rouzeal",
     slug: "rouzeal",
     name: "ROUZEAL",
-    codename: "Live Project · 05",
+    codename: "Live Project · 06",
     tagline: "Illuminating your skin — luxury beauty, delivered.",
     category: "E-commerce · Beauty & Cosmetics",
     year: "2026",
@@ -967,7 +1175,7 @@ export async function verifyPin(pin: string): Promise<boolean> {
     id: "intellihealthcare",
     slug: "intellihealthcare",
     name: "INTELLIHEALTHCARE",
-    codename: "Live Project · 06",
+    codename: "Live Project · 07",
     tagline: "A structured second opinion, powered by machine learning.",
     category: "Healthcare · ML Diagnostics",
     year: "2025",
@@ -1134,215 +1342,7 @@ def predict_symptoms():
         }, f)`,
       },
     ],
-    related: [],
-  },
-  {
-    id: "aqua-flex",
-    slug: "aqua-flex",
-    name: "AQUA FLEX",
-    codename: "Live Project · 07",
-    tagline: "Water treatment engineering, built without inventing a single claim.",
-    category: "Corporate · Water Treatment Engineering",
-    year: "2026",
-    status: "PRODUCTION",
-    accent: "#087DBB",
-    duration: "1 week",
-    team: "Solo full-stack + client-supplied content",
-    role: "Lead engineer / designer",
-    myWork: [
-      "Nine-route Next.js 16 site — design system, every page, header, footer",
-      "Tailwind v4 @theme token system with a contrast gate script that fails if any of 22 colour pairs drops below WCAG AA",
-      "Interactive treatment-process explorers — 9 stages on How It Works, a 5-stage preview on the homepage — built as WAI-ARIA tab patterns",
-      "Eight-step plant selector with a conservative rule-based recommendation engine that explains its own reasoning",
-      "Contact form and selector both compose a structured WhatsApp enquiry — no backend was available, so none was faked",
-      "Centralised pricing module: a price renders only once the business has verified it, otherwise the call to action renders instead",
-      "Business-claims audit that found and removed nine unverifiable public claims",
-      "Vectorised the supplied logo into a mark / wordmark / reversed system, all cut from one master by viewBox",
-      "Namecheap to Vercel domain migration with canonical, sitemap, robots and schema moved on one constant",
-    ],
-    liveUrl: "https://aquaflexpk.com",
-    image: "/projects/aqua-flex.jpg",
-    stack: [
-      "Next.js 16",
-      "React 19",
-      "TypeScript",
-      "Tailwind CSS v4",
-      "Server Components",
-      "Turbopack",
-      "next/font",
-      "JSON-LD",
-      "WhatsApp deeplinks",
-      "Vercel",
-    ],
-    metrics: [
-      { label: "Established", value: "1995", trend: "Client business stat" },
-      { label: "Years in business", value: "30+", trend: "Client business stat" },
-      { label: "Client references", value: "7", trend: "Client business stat" },
-      { label: "Team size", value: "10", trend: "Client business stat" },
-    ],
-    engineeringMetrics: [
-      {
-        label: "Lighthouse performance",
-        value: "96–99",
-        note: "Measured on production across four pages",
-      },
-      {
-        label: "Accessibility / Best Practices / SEO",
-        value: "100",
-        note: "All three, all four pages, zero failures",
-      },
-      { label: "Cumulative layout shift", value: "0.000" },
-      { label: "JS shipped", value: "216 KB gzipped" },
-      {
-        label: "Responsive checks passed",
-        value: "70/70",
-        note: "10 routes across 7 widths, 320px to 1440px",
-      },
-      { label: "Hosting cost / month", value: "$0 (Vercel free)" },
-    ],
-    description:
-      "Corporate site for a Lahore water-treatment company running since 1995. Nine routes covering commercial and domestic RO systems, how treatment actually works, services, references, the team, contact, and an interactive plant selector — built around the constraint that almost nothing about the business had been documented.",
-    challenge:
-      "The client supplied a phone number, an address, seven client names with their sectors, ten staff names, two portraits and two hand-drawn process diagrams. That is it. No capacities, no project photography, no prices at the start, no certifications. Every gap on a site like this is an invitation to write plausible copy — a fake case study, a stock photo under a real client's name, an invented response time. Doing that would have handed the business claims it could not honour.",
-    constraints: [
-      "Seven client references with name and sector only — no capacity, year, value or photograph",
-      "Two of ten staff portraits supplied; no generated faces permitted for the rest",
-      "No backend, no mail service, no API key — the contact path had to work anyway",
-      "Prices arrived late in the build and had to be publishable the moment they did",
-      "Pakistani market: mostly mobile, WhatsApp-first, cost-sensitive hosting",
-    ],
-    tradeoffs: [
-      {
-        decision: "Typography-led client references instead of illustrated case-study cards",
-        gave_up:
-          "Visual richness on the strongest credibility page. A stock plant photo under a real client's name implies that equipment is theirs, which is not mine to imply — so the references are set in type until real site photography is cleared.",
-      },
-      {
-        decision: "Structured WhatsApp messages instead of a form backend",
-        gave_up:
-          "A lead database and submission analytics. There was no mail service to post to, and a form that silently goes nowhere is worse than none — this way the visitor reads the exact message before it sends, on the channel the market already uses.",
-      },
-      {
-        decision: "A stated experience label rather than one computed from the founding year",
-        gave_up:
-          "Self-updating copy. A site that quietly becomes '32 years' next January is a site nobody is checking; the figure is stated once and reviewed deliberately.",
-      },
-    ],
-    solution:
-      "Built every surface so that missing information degrades honestly instead of being filled in. Prices live in one module and render their call to action until the business verifies a figure. Service intervals stay unpublished because they depend on the water. The plant selector recommends a starting category and says three times over that design comes from an analysis. Social icons render as decoration — not dead links — until a real URL exists. A written claims audit records the evidence behind every public statement, and the nine that were removed for having none.",
-    outcome:
-      "Live on its own domain with nine routes, 100 on accessibility, best practices and SEO across every page measured, zero dead links, and zero horizontal overflow from 320px up. Every published claim traces to a supplied file or written confirmation, and the handoff document tells the client exactly what is still needed to fill the remaining gaps.",
-    features: [
-      "Interactive 9-stage treatment process explorer, keyboard-operable",
-      "Eight-step plant selector with an explainable recommendation",
-      "Domestic system pricing with cartridge and component price list",
-      "Requirement form that composes a structured WhatsApp enquiry",
-      "Client reference grid with sector filtering",
-      "Team presented as departments, with initials where no portrait exists",
-      "LocalBusiness schema with confirmed opening hours",
-      "Branded 404, sitemap and robots",
-    ],
-    architecture: [
-      "Next.js 16 App Router, Server Components by default",
-      "Client JS only where something is genuinely interactive — header, two process explorers, reference filter, contact form, selector",
-      "Tailwind v4 @theme design tokens, no component library",
-      "Single-source data modules: company, clients, team, pricing, products",
-      "Contrast gate reads the palette from globals.css so it cannot drift",
-      "next/image with priority on the LCP hero, lazy below the fold",
-      "Static generation for all nine routes",
-      "Vercel edge hosting, custom domain via Namecheap A + CNAME records",
-    ],
-    process: [
-      {
-        week: "Phase 1",
-        label: "Design system + homepage",
-        desc: "Built the token system, the contrast gate, header, footer and homepage before any other page existed, so every later route inherited one visual language.",
-      },
-      {
-        week: "Phase 2–3",
-        label: "Product and process pages",
-        desc: "Commercial, domestic, how-it-works and services. The treatment explorers were built as accessible tab patterns rather than bespoke widgets.",
-      },
-      {
-        week: "Phase 4–5",
-        label: "Proof, people and conversion",
-        desc: "References, the team presentation, contact, and the plant selector with its rule engine. Every claim on these pages had to trace to something the client supplied.",
-      },
-      {
-        week: "Phase 6",
-        label: "Claims audit + production hardening",
-        desc: "Audited every public statement against the evidence, removed nine unverifiable claims, added SEO, structured data, sitemap and robots, and fixed the accessibility defects Lighthouse surfaced.",
-      },
-      {
-        week: "Phase 7",
-        label: "Brand + domain",
-        desc: "Vectorised the official logo into a derived variant system, then migrated the canonical origin from the Vercel alias to aquaflexpk.com — DNS, certificates, redirects and every absolute URL.",
-      },
-    ],
-    snippets: [
-      {
-        language: "typescript",
-        filename: "src/data/pricing.ts",
-        caption:
-          "The rule that stops a price ever being guessed. Anything unverified renders its call to action instead of a number — never Rs. 0, never TBD, never an estimate.",
-        code: `export function formatPrice(
-  key: string,
-  fallbackLabel = "Request Current Price",
-): string {
-  const p = pricing[key];
-
-  if (!p || !p.verified || p.type === "quote" || p.amount === undefined) {
-    return fallbackLabel;
-  }
-
-  if (p.type === "range" && p.maxAmount !== undefined) {
-    return formatRupees(p.amount) + " – " + formatRupees(p.maxAmount);
-  }
-
-  if (p.type === "starting-from") {
-    return "From " + formatRupees(p.amount);
-  }
-
-  return formatRupees(p.amount);
-}`,
-      },
-      {
-        language: "typescript",
-        filename: "src/data/plant-selector.ts",
-        caption:
-          "The selector's recommendation engine. Deliberately simple, because the result screen explains its own reasoning back to the visitor — and TDS never decides the category on its own.",
-        code: `export function recommend(a: SelectorAnswers): Recommendation {
-  const reasons: string[] = [];
-  const caveats: string[] = [];
-  const litres = a.demand ? toLitresPerDay(Number(a.demand), a.demandUnit) : null;
-
-  // An installed plant changes the question entirely.
-  if (a.hasExisting === "yes") {
-    reasons.push("There is already a treatment system installed");
-    caveats.push(
-      "Whether it is serviced, modified or replaced depends on what is " +
-        "installed and how far it is from what is now needed.",
-    );
-    return { category: categories["service-upgrade"], reasons, caveats };
-  }
-
-  const processUse = a.purpose === "process" || a.purpose === "boiler";
-  const isIndustrial =
-    a.application === "industrial" ||
-    processUse ||
-    (litres !== null && litres >= INDUSTRIAL_FROM);
-
-  // Nothing to go on: say so rather than guessing a category.
-  if (!isIndustrial && a.application !== "home" && a.source === "unknown") {
-    caveats.push("A test of the supply is the sensible first step.");
-    return { category: categories["analysis-first"], reasons, caveats };
-  }
-
-  // ...source and TDS qualify the answer; they never decide it alone.
-}`,
-      },
-    ],
-    related: ["rustam-battery", "window-land"],
+    related: ["hisably", "aqua-flex"],
   },
 ];
 

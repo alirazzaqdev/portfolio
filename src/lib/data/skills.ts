@@ -27,14 +27,14 @@ export const skills: Skill[] = [
   { id: "python", name: "Python", category: "language", years: 3, projects: ["window-land"] },
   { id: "java", name: "Java", category: "language", years: 3 },
   { id: "javascript", name: "JavaScript", category: "language", years: 3, projects: ["rustam-battery", "solar-quotation", "window-land"] },
-  { id: "typescript", name: "TypeScript", category: "language", years: 2, projects: ["rustam-battery", "solar-quotation", "window-land"] },
+  { id: "typescript", name: "TypeScript", category: "language", years: 2, projects: ["aqua-flex", "rustam-battery", "solar-quotation", "window-land"] },
   { id: "cpp", name: "C++", category: "language", years: 2 },
   { id: "php", name: "PHP", category: "language", years: 2 },
 
   // Frontend
-  { id: "react", name: "React.js", category: "frontend", years: 3, projects: ["rustam-battery", "solar-quotation", "window-land"] },
-  { id: "nextjs", name: "Next.js", category: "frontend", years: 2, projects: ["rustam-battery", "window-land"] },
-  { id: "tailwind", name: "Tailwind CSS", category: "frontend", years: 2, projects: ["rustam-battery", "solar-quotation", "window-land"] },
+  { id: "react", name: "React.js", category: "frontend", years: 3, projects: ["aqua-flex", "rustam-battery", "solar-quotation", "window-land"] },
+  { id: "nextjs", name: "Next.js", category: "frontend", years: 2, projects: ["aqua-flex", "rustam-battery", "window-land"] },
+  { id: "tailwind", name: "Tailwind CSS", category: "frontend", years: 2, projects: ["aqua-flex", "rustam-battery", "solar-quotation", "window-land"] },
 
   // Backend
   { id: "node", name: "Node.js", category: "backend", years: 3, projects: ["window-land"] },
@@ -52,7 +52,7 @@ export const skills: Skill[] = [
   // Cloud & DevOps
   { id: "docker", name: "Docker", category: "cloud", years: 2 },
   { id: "aws", name: "AWS", category: "cloud", years: 2 },
-  { id: "vercel", name: "Vercel", category: "cloud", years: 2, projects: ["rustam-battery", "solar-quotation", "window-land"] },
+  { id: "vercel", name: "Vercel", category: "cloud", years: 2, projects: ["aqua-flex", "rustam-battery", "solar-quotation", "window-land"] },
   { id: "git", name: "Git", category: "cloud", years: 4 },
   { id: "linux", name: "Linux", category: "cloud", years: 3 },
 
